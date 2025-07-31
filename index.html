@@ -112,20 +112,19 @@
   </div>
 
   <script>
-    const banco = [
-      {
-        codigo: "F001",
-        inicial: "Falha elétrica no motor.",
-        descricao2: "Verificação da fiação e conexões.",
-        final: "Substituição do cabo principal e teste realizado."
-      },
-      {
-        codigo: "F002",
-        inicial: "Vazamento de óleo detectado.",
-        descricao2: "Inspeção de juntas e mangueiras.",
-        final: "Troca da junta do cárter e limpeza da área."
-      }
-    ];
+    let banco = [];
+
+    // Carregar dados do arquivo dados.json
+    fetch('dados.json')
+      .then(response => response.json())
+      .then(data => {
+        banco = data;
+        console.log('Dados carregados:', banco);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar dados:', error);
+        document.getElementById('resultado').innerHTML = '<em>Erro ao carregar os dados. Tente novamente.</em>';
+      });
 
     function buscar() {
       const termo = document.getElementById('busca').value.trim().toLowerCase();
@@ -133,6 +132,11 @@
 
       if (!termo) {
         resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
+        return;
+      }
+
+      if (banco.length === 0) {
+        resultado.innerHTML = '<em>Os dados ainda estão carregando. Aguarde um momento.</em>';
         return;
       }
 
