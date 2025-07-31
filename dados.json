@@ -1,24 +1,14 @@
-<script>
-const banco = [
+[
   {
-    codigo: "F001",
-    inicial: "Falha elétrica no motor.",
-    descricao2: "Verificação da fiação e conexões.",
-    final: "Substituição do cabo principal e teste realizado."
+    "codigo": "F001",
+    "inicial": "Falha elétrica no motor.",
+    "descricao2": "Verificação da fiação e conexões.",
+    "final": "Substituição do cabo principal e teste realizado."
   },
   {
-    codigo: "F002",
-    inicial: "Vazamento de óleo detectado.",
-    descricao2: "Inspeção de juntas e mangueiras.",
-    final: "Troca da junta do cárter e limpeza da área."
-  },
-  {
-    codigo: "F003",
-    inicial: "BUCHA DO ACOPLAMENTO.",
-    descricao2: "DURANTE INSPEÇÃO.",
-    final: "Substituição das pastilhas e sangria do sistema."
+    "codigo": "F002",
+    "inicial": "Vazamento de óleo detectado.",
+    "descricao2": "Inspeção de juntas e mangueiras.",
+    "final": "Troca da junta do cárter e limpeza da área."
   }
-];
-
-// ... resto do seu código JavaScript aqui
-</script>
+]
