@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plataforma de Busca OS</title>
+  <style>
+    /* Mesmos estilos de antes */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4e73df, #1cc88a);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #4e73df;
+      font-size: 1.8rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus {
+      border-color: #4e73df;
+      box-shadow: 0 0 5px rgba(78, 115, 223, 0.4);
+    }
+    button {
+      background: #4e73df;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #2e59d9;
+    }
+    .resultado {
+      text-align: left;
+      margin-top: 20px;
+      background: #f8f9fc;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+      border: 1px solid #e3e6f0;
+      min-height: 120px;
+    }
+    .resultado strong {
+      color: #1cc88a;
+    }
+    .codigo {
+      display: inline-block;
+      background: #4e73df;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .copiar-btn {
+      background: #1cc88a;
+      margin-left: 8px;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+    }
+    .copiar-btn:hover {
+      background: #17a673;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔍 Plataforma de Busca OS</h2>
+
+    <div class="input-group">
+      <input type="text" id="busca" placeholder="Digite o código ou palavra-chave" />
+      <button onclick="buscar()">Buscar</button>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <em>Digite um código ou palavra-chave acima...</em>
+    </div>
+  </div>
+
+  <script>
+    const banco = [
+      {
+        codigo: "F001",
+        inicial: "Falha elétrica no motor.",
+        descricao2: "Verificação da fiação e conexões.",
+        final: "Substituição do cabo principal e teste realizado."
+      },
+      {
+        codigo: "F002",
+        inicial: "Vazamento de óleo detectado.",
+        descricao2: "Inspeção de juntas e mangueiras.",
+        final: "Troca da junta do cárter e limpeza da área."
+      }
+    ];
+
+    function buscar() {
+      const termo = document.getElementById('busca').value.trim().toLowerCase();
+      const resultado = document.getElementById('resultado');
+
+      if (!termo) {
+        resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
+        return;
+      }
+
+      const item = banco.find(x => 
+        x.codigo.toLowerCase() === termo ||
+        x.inicial.toLowerCase().includes(termo) ||
+        x.descricao2.toLowerCase().includes(termo) ||
+        x.final.toLowerCase().includes(termo)
+      );
+
+      if (item) {
+        resultado.innerHTML = `
+          <div class="codigo">Código de Falha: ${item.codigo}</div><br>
+          <div>
+            <strong>Descrição inicial:</strong> ${item.inicial}
+            <button class="copiar-btn" onclick="copiarTexto('${item.inicial}')">📋 Copiar</button>
+          </div><br>
+          <div>
+            <strong>Descrição 2:</strong> ${item.descricao2}
+            <button class="copiar-btn" onclick="copiarTexto('${item.descricao2}')">📋 Copiar</button>
+          </div><br>
+          <div>
+            <strong>Descrição final:</strong> ${item.final}
+            <button class="copiar-btn" onclick="copiarTexto('${item.final}')">📋 Copiar</button>
+          </div>
+        `;
+      } else {
+        resultado.innerHTML = `<em>Nenhum resultado encontrado para "<strong>${termo}</strong>".</em>`;
+      }
+    }
+
+    function copiarTexto(texto) {
+      navigator.clipboard.writeText(texto);
+    }
+  </script>
+</body>
+</html>
