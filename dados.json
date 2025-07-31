@@ -10,5 +10,11 @@
     "inicial": "Vazamento de óleo detectado.",
     "descricao2": "Inspeção de juntas e mangueiras.",
     "final": "Troca da junta do cárter e limpeza da área."
+  },
+  {
+    codigo: "F003",
+    inicial: "Problema no sistema de freios.",
+    descricao2: "Verificação do fluido e pastilhas.",
+    final: "Substituição das pastilhas e sangria do sistema."
   }
 ]
