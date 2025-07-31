@@ -1,3 +1,4 @@
+<script>
 const banco = [
   {
     codigo: "F001",
@@ -18,3 +19,6 @@ const banco = [
     final: "Substituição das pastilhas e sangria do sistema."
   }
 ];
+
+// ... resto do seu código JavaScript aqui
+</script>
