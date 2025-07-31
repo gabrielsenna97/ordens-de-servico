@@ -13,8 +13,8 @@ const banco = [
   },
   {
     codigo: "F003",
-    inicial: "Problema no sistema de freios.",
-    descricao2: "Verificação do fluido e pastilhas.",
+    inicial: "BUCHA DO ACOPLAMENTO.",
+    descricao2: "DURANTE INSPEÇÃO.",
     final: "Substituição das pastilhas e sangria do sistema."
   }
 ];
