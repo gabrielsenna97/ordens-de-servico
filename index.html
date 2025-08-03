@@ -1,130 +1,69 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca Inteligente de Ordens de Serviço</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .search-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        input, button {
-            padding: 8px;
-            font-size: 16px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .no-results {
-            color: #666;
-            font-style: italic;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Consulta de OS</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f7f7f7; }
+    .os-card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px #ccc; }
+    .codigo { font-weight: bold; color: #444; }
+    input { padding: 10px; width: 100%; margin-bottom: 20px; }
+  </style>
 </head>
 <body>
-    <h1>Busca de Ordens de Serviço</h1>
-    
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Digite sua busca...">
-        <button onclick="buscarOrdens()">Buscar</button>
-    </div>
-    
-    <div id="resultsContainer">
-        <!-- Os resultados serão exibidos aqui -->
-    </div>
+  <h2>Consulta de Modelos de Ordem de Serviço</h2>
+  <input type="text" id="busca" placeholder="Buscar por descrição ou código..." oninput="filtrar()">
 
-    <script>
-        // Dados de exemplo (substitua pelos seus dados reais do JSON)
-        const ordensDeServico = [
-            { id: 1, descricao: "Troca de bucha dianteira", cliente: "João Silva", status: "Concluído" },
-            { id: 2, descricao: "Alinhamento e balanceamento", cliente: "Maria SOUZA", status: "Pendente" },
-            { id: 3, descricao: "Reparo no amortecedor", cliente: "Carlos Oliveira", status: "Em andamento" },
-            { id: 4, descricao: "Substituição da bucha traseira", cliente: "Ana Cândido", status: "Concluído" },
-            { id: 5, descricao: "Revisão geral", cliente: "Pedro Álvares", status: "Cancelado" }
-        ];
+  <div id="resultados"></div>
 
-        // Função para normalizar o texto (remove acentos, espaços extras, converte para minúsculas)
-        function normalizarTexto(texto) {
-            return texto
-                .toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .replace(/\s+/g, ' ').trim();
-        }
+  <script>
+    let dados = [];
 
-        // Função principal de busca
-        function buscarOrdens() {
-            const termo = document.getElementById('searchInput').value;
-            const termoNormalizado = normalizarTexto(termo);
-            const resultados = [];
-            
-            // Percorre todas as ordens de serviço
-            for (const ordem of ordensDeServico) {
-                // Verifica em todos os campos da ordem
-                for (const key in ordem) {
-                    if (typeof ordem[key] === 'string') {
-                        const valorNormalizado = normalizarTexto(ordem[key]);
-                        if (valorNormalizado.includes(termoNormalizado)) {
-                            resultados.push(ordem);
-                            break; // Se encontrou em um campo, não precisa verificar os outros
-                        }
-                    }
-                }
-            }
-            
-            // Exibe os resultados
-            exibirResultados(resultados);
-        }
+    async function carregarDados() {
+      const response = await fetch('dados.json');
+      dados = await response.json();
+      mostrarTodos();
+    }
 
-        // Função para exibir os resultados na página
-        function exibirResultados(resultados) {
-            const container = document.getElementById('resultsContainer');
-            
-            if (resultados.length === 0) {
-                container.innerHTML = '<p class="no-results">Nenhuma ordem de serviço encontrada.</p>';
-                return;
-            }
-            
-            // Cria a tabela de resultados
-            let html = '<table><thead><tr><th>ID</th><th>Descrição</th><th>Cliente</th><th>Status</th></tr></thead><tbody>';
-            
-            for (const ordem of resultados) {
-                html += `
-                    <tr>
-                        <td>${ordem.id}</td>
-                        <td>${ordem.descricao}</td>
-                        <td>${ordem.cliente}</td>
-                        <td>${ordem.status}</td>
-                    </tr>
-                `;
-            }
-            
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
+    function mostrarTodos() {
+      const container = document.getElementById('resultados');
+      container.innerHTML = "";
+      dados.forEach(item => {
+        container.innerHTML += `
+          <div class="os-card">
+            <div class="codigo">Código: ${item.CODIGO}</div>
+            <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
+            <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+            <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+          </div>
+        `;
+      });
+    }
 
-        // Exibe todas as ordens quando a página carrega
-        window.onload = function() {
-            exibirResultados(ordensDeServico);
-        };
-    </script>
+    function filtrar() {
+      const termo = document.getElementById('busca').value.toLowerCase();
+      const filtrados = dados.filter(item =>
+        item.CODIGO.toLowerCase().includes(termo) ||
+        item.DESCRICAO_OS.toLowerCase().includes(termo) ||
+        item.DESCRICAO_SUB_OS.toLowerCase().includes(termo) ||
+        item.SERVICO_REALIZADO.toLowerCase().includes(termo)
+      );
+
+      const container = document.getElementById('resultados');
+      container.innerHTML = "";
+      filtrados.forEach(item => {
+        container.innerHTML += `
+          <div class="os-card">
+            <div class="codigo">Código: ${item.CODIGO}</div>
+            <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
+            <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+            <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+          </div>
+        `;
+      });
+    }
+
+    carregarDados();
+  </script>
 </body>
 </html>
