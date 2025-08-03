@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Busca OS - Oliveira Energia</title>
+  <title>Plataforma de Busca de Códigos de Falha - Oliveira Energia</title>
   <style>
     :root {
       --verde-escuro: #069732;
@@ -182,6 +182,26 @@
       display: none;
     }
     
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+    
+    .error {
+      color: #d32f2f;
+      font-style: italic;
+    }
+    
+    .search-tips {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+      padding: 10px;
+      background-color: #f8f8f8;
+      border-radius: 4px;
+      border-left: 3px solid var(--verde-claro);
+    }
+    
     @media (max-width: 768px) {
       .top-bar-white {
         height: 70px;
@@ -225,11 +245,15 @@
   <!-- Conteúdo principal -->
   <div class="main-content">
     <div class="card">
-      <h1>Plataforma de Busca OS</h1>
+      <h1>Plataforma de Busca de Códigos de Falha</h1>
       
       <div class="search-box">
         <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" onkeypress="if(event.key === 'Enter') buscar()">
         <button onclick="buscar()">Buscar</button>
+      </div>
+      
+      <div class="search-tips">
+        <strong>Dicas de busca:</strong> Você pode pesquisar por códigos (F001), descrições (vazamento) ou serviços realizados.
       </div>
       
       <div class="result-container" id="resultado">
@@ -247,6 +271,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Banco de dados inicial vazio - será preenchido via JSON
       let banco = [];
       let dadosCarregados = false;
 
@@ -259,28 +284,35 @@
       // Função para carregar dados do JSON
       async function carregarDados() {
         try {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados...</em>';
+          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando banco de códigos de falha...</em>';
           
-          const response = await fetch('dados.json');
+          // Aqui você pode substituir pelo caminho do seu arquivo JSON
+          const response = await fetch('codigos_falha.json');
           
           if (response.ok) {
             banco = await response.json();
             dadosCarregados = true;
-            document.getElementById('resultado').innerHTML = '<em>Digite um código ou palavra-chave acima...</em>';
+            document.getElementById('resultado').innerHTML = 
+              '<em>Banco de códigos carregado com sucesso! Digite um código ou palavra-chave para buscar.</em>' +
+              '<div class="search-tips">Total de códigos disponíveis: ' + banco.length + '</div>';
           } else {
             throw new Error('Falha ao carregar dados');
           }
         } catch (error) {
           console.error('Erro ao carregar dados:', error);
           document.getElementById('resultado').innerHTML = 
-            '<em class="loading">Erro ao carregar os dados. Verifique:<br>1. O arquivo JSON existe<br>2. Está no local correto<br>3. A conexão está ativa</em>';
+            '<em class="error">Erro ao carregar os códigos de falha. Verifique:<br>' +
+            '1. O arquivo JSON existe e está no local correto (codigos_falha.json)<br>' +
+            '2. A conexão está ativa<br>' +
+            '3. O formato do JSON está correto</em>';
         }
       }
 
-      // Função de busca
+      // Função de busca inteligente
       window.buscar = function() {
         if (!dadosCarregados) {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          document.getElementById('resultado').innerHTML = 
+            '<em class="loading">Banco de códigos ainda não carregado. Aguarde...</em>';
           return;
         }
         
@@ -288,63 +320,90 @@
         const resultado = document.getElementById('resultado');
 
         if (!termo) {
-          resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
+          resultado.innerHTML = '<em>Por favor, digite um código ou palavra-chave para buscar.</em>';
           return;
         }
 
-        const itensEncontrados = banco.filter(item => 
-          Object.values(item).some(
+        // Busca inteligente que procura em todos os campos
+        const itensEncontrados = banco.filter(item => {
+          // Se o termo começa com F (código de falha), busca exata no campo CODIGO
+          if (termo.startsWith('f') && item.CODIGO) {
+            if (item.CODIGO.toLowerCase() === termo) {
+              return true;
+            }
+          }
+          
+          // Busca em todos os campos
+          return Object.values(item).some(
             valor => valor && valor.toString().toLowerCase().includes(termo)
-          )
-        );
+          );
+        });
 
         mostrarResultados(itensEncontrados, termo);
       };
 
-      // Mostra os resultados
+      // Mostra os resultados formatados
       function mostrarResultados(itens, termo) {
         const resultado = document.getElementById('resultado');
         
         if (itens.length === 0) {
-          resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
+          resultado.innerHTML = 
+            `<em>Nenhum código de falha encontrado para "${termo}".</em>` +
+            '<div class="search-tips">Tente buscar por termos mais gerais ou verifique a ortografia.</div>';
           return;
         }
 
-        resultado.innerHTML = itens.map(item => `
-          <div class="item-resultado">
-            <div class="codigo-resultado">
-              <strong>Código:</strong> ${item.CODIGO || 'N/A'}
-            </div>
-            <div class="os-field">
-              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
-            </div>
-            ${item.DESCRICAO_SUB_OS ? `
-            <div class="os-field">
-              <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
-            </div>` : ''}
-            ${item.SERVICO_REALIZADO ? `
-            <div class="os-field">
-              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
-            </div>` : ''}
+        resultado.innerHTML = `
+          <div class="search-tips">
+            ${itens.length} ${itens.length === 1 ? 'resultado encontrado' : 'resultados encontrados'} para "${termo}"
           </div>
-        `).join('');
+          ${itens.map(item => `
+            <div class="item-resultado">
+              <div class="codigo-resultado">
+                <strong>Código:</strong> ${item.CODIGO || 'N/A'}
+              </div>
+              <div class="os-field">
+                <div><strong>Descrição:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'Descrição copiada!')">Copiar</button>
+              </div>
+              ${item.DESCRICAO_SUB_OS ? `
+              <div class="os-field">
+                <div><strong>Detalhes:</strong> ${item.DESCRICAO_SUB_OS}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Detalhes copiados!')">Copiar</button>
+              </div>` : ''}
+              ${item.SERVICO_REALIZADO ? `
+              <div class="os-field">
+                <div><strong>Solução:</strong> ${item.SERVICO_REALIZADO}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Solução copiada!')">Copiar</button>
+              </div>` : ''}
+            </div>
+          `).join('')}`;
       }
 
-      // Função para escapar texto
+      // Função para escapar texto para exibição HTML
       function escapeTexto(texto) {
         if (!texto) return '';
         return texto.toString()
-          .replace(/'/g, "\\'")
-          .replace(/"/g, '\\"')
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;")
           .replace(/\n/g, '\\n');
       }
 
-      // Função para copiar texto
+      // Função para copiar texto para área de transferência
       window.copiarTexto = function(texto, mensagem) {
-        navigator.clipboard.writeText(texto)
+        // Remove as entidades HTML antes de copiar
+        const textoParaCopiar = texto
+          .replace(/&amp;/g, "&")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/&quot;/g, '"')
+          .replace(/&#039;/g, "'")
+          .replace(/\\n/g, '\n');
+          
+        navigator.clipboard.writeText(textoParaCopiar)
           .then(() => {
             const notificacao = document.getElementById('notification');
             notificacao.textContent = mensagem;
