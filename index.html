@@ -247,35 +247,31 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      let banco = [];
-      let dadosCarregados = false;
+      // Dados mockados para exemplo
+      let banco = [
+        {
+          "CODIGO": "F083",
+          "DESCRICAO_OS": "Bucha",
+          "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
+          "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
+        },
+        {
+          "CODIGO": "F088",
+          "DESCRICAO_OS": "TROCA DE BICOS INJETORES",
+          "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO ALTO CONSUMO 0,268L/H",
+          "SERVICO_REALIZADO": ""
+        },
+        {
+          "CODIGO": "F090",
+          "DESCRICAO_OS": "MANUTENÇÃO PREVENTIVA",
+          "DESCRICAO_SUB_OS": "",
+          "SERVICO_REALIZADO": "COORDENCIALIA ACOMPANHAMENTO FOI IDENTIFICADO QUE O GRUPO SOLADOR ESTÁ APRESENTANDO ALTO CONSUMO 0,263 L/H. FOI REALIZADO CHEGUISTE E INVADO PARA ANÁLISE E APÓS AVALIAÇÃO FOI APROVADO A SUBSTITUIÇÃO DAS URNDEZS INJETORES. FOI REALIZADO A SUBSTITUIÇÃO DOS BICOS INJETORES, ARRIBA-LA DO VIDAÇÃO E RIT AMIL DE VIDAÇÃO DO INJETOR. FEITO INSPEÇÃO NAS BUCHAS DO SIGNATÂMICO, INSPEÇÃO NO FLITRO E AR, LIMPEZA DA VAQUINA SOLENDOS, SUBSTITUIÇÃO DOS FLITROS DE COMBUSTINTE PRIMÁRIO E SEGUNDARSE À LAUGURA EXTERNA E INTERNA, VARIELAMENTO DO BOJADOR, REALIZADO CRUDEMENTO DE ADMIN. MATERIAL ITIPIZADO NA CORRETOR DE BICO."
+        }
+      ];
+      let dadosCarregados = true;
 
       // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
-
-      // Carrega os dados ao iniciar
-      carregarDados();
-
-      // Função para carregar dados do JSON
-      async function carregarDados() {
-        try {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados...</em>';
-          
-          const response = await fetch('dados.json');
-          
-          if (response.ok) {
-            banco = await response.json();
-            dadosCarregados = true;
-            document.getElementById('resultado').innerHTML = '<em>Digite um código ou palavra-chave acima...</em>';
-          } else {
-            throw new Error('Falha ao carregar dados');
-          }
-        } catch (error) {
-          console.error('Erro ao carregar dados:', error);
-          document.getElementById('resultado').innerHTML = 
-            '<em class="loading">Erro ao carregar os dados. Verifique:<br>1. O arquivo JSON existe<br>2. Está no local correto<br>3. A conexão está ativa</em>';
-        }
-      }
 
       // Função de busca
       window.buscar = function() {
