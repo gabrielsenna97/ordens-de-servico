@@ -1,69 +1,62 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Consulta de OS</title>
-  <style>
-    body { font-family: Arial; margin: 20px; background: #f7f7f7; }
-    .os-card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px #ccc; }
-    .codigo { font-weight: bold; color: #444; }
-    input { padding: 10px; width: 100%; margin-bottom: 20px; }
-  </style>
-</head>
-<body>
-  <h2>Consulta de Modelos de Ordem de Serviço</h2>
-  <input type="text" id="busca" placeholder="Buscar por descrição ou código..." oninput="filtrar()">
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<script>
+  let dados = [];
 
-  <div id="resultados"></div>
+  async function carregarDados() {
+    const res = await fetch('dados.json');
+    dados = await res.json();
+    inicializarBusca();
+  }
 
-  <script>
-    let dados = [];
+  let fuse;
 
-    async function carregarDados() {
-      const response = await fetch('dados.json');
-      dados = await response.json();
-      mostrarTodos();
+  function inicializarBusca() {
+    const opcoes = {
+      keys: [
+        "CODIGO",
+        "DESCRICAO_OS",
+        "DESCRICAO_SUB_OS",
+        "SERVICO_REALIZADO"
+      ],
+      threshold: 0.4, // sensibilidade da busca (0 = exato, 1 = muito flexível)
+      includeScore: true
+    };
+
+    fuse = new Fuse(dados, opcoes);
+    filtrar(); // mostra todos ao carregar
+  }
+
+  function filtrar() {
+    const termo = document.getElementById('busca').value.trim();
+
+    let resultados = [];
+    if (termo === "") {
+      resultados = dados.map(d => ({ item: d, score: 0 }));
+    } else {
+      resultados = fuse.search(termo);
     }
 
-    function mostrarTodos() {
-      const container = document.getElementById('resultados');
-      container.innerHTML = "";
-      dados.forEach(item => {
-        container.innerHTML += `
-          <div class="os-card">
-            <div class="codigo">Código: ${item.CODIGO}</div>
-            <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
-            <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-            <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
-          </div>
-        `;
-      });
+    const container = document.getElementById('resultados');
+    container.innerHTML = "";
+
+    resultados.sort((a, b) => a.score - b.score); // ordena por relevância
+
+    resultados.forEach(r => {
+      const item = r.item;
+      container.innerHTML += `
+        <div class="os-card">
+          <div class="codigo">Código: ${item.CODIGO}</div>
+          <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
+          <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+          <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+        </div>
+      `;
+    });
+
+    if (resultados.length === 0) {
+      container.innerHTML = "<p>Nenhum resultado encontrado.</p>";
     }
+  }
 
-    function filtrar() {
-      const termo = document.getElementById('busca').value.toLowerCase();
-      const filtrados = dados.filter(item =>
-        item.CODIGO.toLowerCase().includes(termo) ||
-        item.DESCRICAO_OS.toLowerCase().includes(termo) ||
-        item.DESCRICAO_SUB_OS.toLowerCase().includes(termo) ||
-        item.SERVICO_REALIZADO.toLowerCase().includes(termo)
-      );
-
-      const container = document.getElementById('resultados');
-      container.innerHTML = "";
-      filtrados.forEach(item => {
-        container.innerHTML += `
-          <div class="os-card">
-            <div class="codigo">Código: ${item.CODIGO}</div>
-            <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
-            <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-            <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
-          </div>
-        `;
-      });
-    }
-
-    carregarDados();
-  </script>
-</body>
-</html>
+  carregarDados();
+</script>
