@@ -13,6 +13,7 @@
       --branco: #ffffff;
       --cinza-claro: #f5f5f5;
       --cinza-escuro: #333333;
+      --vermelho: #d32f2f;
     }
     
     body {
@@ -234,11 +235,21 @@
     }
     
     .error-message {
-      color: #d32f2f;
+      color: var(--vermelho);
       background-color: #ffebee;
       padding: 10px;
       border-radius: 4px;
-      border-left: 4px solid #d32f2f;
+      border-left: 4px solid var(--vermelho);
+      margin-bottom: 15px;
+    }
+    
+    .success-message {
+      color: var(--verde-escuro);
+      background-color: #e8f5e9;
+      padding: 10px;
+      border-radius: 4px;
+      border-left: 4px solid var(--verde-escuro);
+      margin-bottom: 15px;
     }
     
     @media (max-width: 768px) {
@@ -352,33 +363,64 @@
           const response = await fetch('dados.json');
           
           if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            throw new Error(`Erro ao carregar arquivo: ${response.status}`);
           }
           
-          banco = await response.json();
+          const dados = await response.json();
+          
+          // Verifica se o JSON tem a estrutura correta
+          if (!Array.isArray(dados) {
+            throw new Error('O arquivo JSON não contém um array válido');
+          }
+          
+          if (dados.length === 0) {
+            throw new Error('O arquivo JSON está vazio');
+          }
+          
+          if (!dados[0].CODIGO && !dados[0].DESCRICAO_OS) {
+            throw new Error('Estrutura do JSON não corresponde ao esperado');
+          }
+          
+          banco = dados;
           dadosCarregados = true;
-          resultado.innerHTML = '<em>Digite um código ou palavra-chave para buscar...</em>';
-          console.log('Dados carregados com sucesso:', banco);
+          
+          resultado.innerHTML = `
+            <div class="success-message">
+              Dados carregados com sucesso! ${banco.length} ordens de serviço disponíveis.
+            </div>
+            <em>Digite um código ou palavra-chave para buscar...</em>
+          `;
+          
+          console.log('Dados carregados:', banco);
         } catch (error) {
           console.error('Erro ao carregar JSON:', error);
           
           // Fallback com dados incorporados
           banco = [
-            // Cole AQUI todo o seu JSON
             {
-              "CODIGO": "F083",
-              "DESCRICAO_OS": "Bucha",
-              "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
-              "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
+              "CODIGO": "",
+              "DESCRICAO_OS": "TROCA DE FILTROS",
+              "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR",
+              "SERVICO_REALIZADO": "OCORRÊNCIA: GRUPO GERADOR APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR , APÓS INSPEÇÃO FOI CONSTATADO QUE OS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO ESTAVAM BASTANTE SUJOS, NECESSÁRIO A SUBSTITUIÇÃO. FOI REALIZADO A SUBSTITUIÇÃO DOS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO, FEITO INSPEÇÃO NAS MAGUEIRAS DE COMBUSTIVEL, FEITO INSPEÇÃO NA VALVULA SOLENOIDE, FORAM UTILIZADOS: 01 FILTRO PRIMÁRIO BOSCH (COD: 20620) 01 FILTRO SECUNDÁRIO BOSCH (COD: 20618) SERVIÇO REALIZADO POR (OPERADOR E MANTENEDOR)."
             },
-            // ... (adicione todos os itens do seu JSON aqui)
+            {
+              "CODIGO": "",
+              "DESCRICAO_OS": "TROCA DE OLEO (PREVENTIVA 250 HORAS)",
+              "DESCRICAO_SUB_OS": "MANUTENÇÃO PREVENTIVA - 250 H ~ 13 DIAS (TROCA DE ÓLEO E FILTROS)",
+              "SERVICO_REALIZADO": "FOI REALIZADO A TROCA DE OLEO, TROCA DO FILTRO DE OLEO, FEITO A COLETA DE AMOSTRA DE OLEO, LIMPEZA E INSPEÇÃO NA GALERIA DO FILTRO DE AR, LIMPEZA E TROCA DOS ORINGS E PLACA DE INSERÇÃO DO FILTRO CENTRIFUGO, INSPEÇÃO NAS MANGEIRAS DE COMBUSTIVEL, INSPEÇÃO DE LIMALHAS NO FILTRO DE OLEO, INSPEÇÃO NAS ENGRENAGENS INTERMEDIARIAS, FORAM UTILIZADOS: 39 LT ÓLEO MOBIL 15W40 (COD: 9071) 1 FILTRO DE ÓLEO LUBRIFICANTE (COD: 20619) 1 PLACA DE INSERÇÃO (COD: 11093) 1 KIT CONTRATO (COD: 9254) 1 ANEL CENTRIFUGO. (COD: 9873)1 ANEL CENTRIFUGO (COD: 9874) 1 ANEL DE VEDAÇÃO DO CENTRIFUGO (COD: 9875) 03 LTS ES COMPLEAT (COD.:1015) 01 LLC500 (COD.18025) 01 LT DESENGRAXANTE (COD.8945) SERVIÇO REALIZADO POR: (OPERADOR E MANTENEDOR)."
+            }
+            // Adicione aqui os outros itens do seu JSON
           ];
           
           dadosCarregados = true;
+          
           resultado.innerHTML = `
             <div class="error-message">
               <strong>Atenção:</strong> Dados carregados em modo offline.
               <br><small>${error.message}</small>
+            </div>
+            <div class="success-message">
+              ${banco.length} ordens de serviço disponíveis (dados locais).
             </div>
             <em>Digite um código ou palavra-chave para buscar...</em>
           `;
@@ -402,6 +444,7 @@
         const itensEncontrados = banco.filter(item => 
           Object.values(item).some(
             valor => valor && valor.toString().toLowerCase().includes(termo)
+          )
         );
 
         mostrarResultados(itensEncontrados, termo);
@@ -410,31 +453,41 @@
       // 3. Mostrar resultados
       function mostrarResultados(itens, termo) {
         if (itens.length === 0) {
-          resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
+          resultado.innerHTML = `
+            <div class="error-message">
+              Nenhum resultado encontrado para: <strong>"${termo}"</strong>
+            </div>
+            <em>Tente outro termo de busca.</em>
+          `;
           return;
         }
 
-        resultado.innerHTML = itens.map(item => `
-          <div class="item-resultado">
-            <div class="codigo-resultado">
-              <strong>Código:</strong> ${item.CODIGO || 'N/A'}
-            </div>
-            <div class="os-field">
-              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
-            </div>
-            ${item.DESCRICAO_SUB_OS ? `
-            <div class="os-field">
-              <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
-            </div>` : ''}
-            ${item.SERVICO_REALIZADO ? `
-            <div class="os-field">
-              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
-            </div>` : ''}
+        resultado.innerHTML = `
+          <div class="success-message">
+            ${itens.length} resultado(s) encontrado(s) para: <strong>"${termo}"</strong>
           </div>
-        `).join('');
+          ${itens.map(item => `
+            <div class="item-resultado">
+              <div class="codigo-resultado">
+                <strong>Código:</strong> ${item.CODIGO || 'N/A'}
+              </div>
+              <div class="os-field">
+                <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
+              </div>
+              ${item.DESCRICAO_SUB_OS ? `
+              <div class="os-field">
+                <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
+              </div>` : ''}
+              ${item.SERVICO_REALIZADO ? `
+              <div class="os-field">
+                <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
+              </div>` : ''}
+            </div>
+          `).join('')}
+        `;
       }
 
       // 4. Funções auxiliares
@@ -458,7 +511,12 @@
             notificacao.style.display = 'block';
             setTimeout(() => notificacao.style.display = 'none', 2000);
           })
-          .catch(err => console.error('Erro ao copiar:', err));
+          .catch(err => {
+            console.error('Erro ao copiar:', err);
+            document.getElementById('notification').textContent = 'Erro ao copiar!';
+            document.getElementById('notification').style.display = 'block';
+            setTimeout(() => document.getElementById('notification').style.display = 'none', 2000);
+          });
       };
     });
   </script>
