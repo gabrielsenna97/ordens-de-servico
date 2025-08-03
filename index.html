@@ -3,22 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Busca OS</title>
+  <title>Plataforma de Busca OS - Inteligente</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="header">
-    <h1>PLATAFORMA DE BUSCA OS</h1>
+    <h1>PLATAFORMA DE BUSCA OS INTELIGENTE</h1>
     <div class="header-bar"></div>
   </div>
 
   <div class="main">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Digite código ou palavra-chave">
-      <button id="searchButton">Buscar</button>
+      <input type="text" id="searchInput" placeholder="Digite código (03, F003), descrição ou palavra-chave">
+      <button id="searchButton">Buscar Inteligente</button>
     </div>
     
-    <div id="resultsContainer"></div>
+    <div id="resultsContainer">
+      <div class="help-text">
+        <p>Exemplos de buscas que funcionam:</p>
+        <ul>
+          <li><strong>Códigos:</strong> "03", "F003", "F-003"</li>
+          <li><strong>Termos:</strong> "bucha", "junta", "anel elastico"</li>
+          <li><strong>Parciais:</strong> "elast" (encontra "elástico")</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="notification" id="notification"></div>
