@@ -1,16 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Busca OS - Oliveira Energia</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- Favicon vazio para evitar erro 404 -->
+  <style>
+    :root {
+      --verde-escuro: #069732;
+      --verde-claro: #2fbe1a;
+      --amarelo: #ffea00;
+      --branco: #fdfdfc;
+      --cinza-claro: #f5f5f5;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--branco);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--verde-escuro), var(--verde-claro));
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .slogan {
+      font-style: italic;
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      padding: 2.5rem;
+      border-top: 5px solid var(--amarelo);
+    }
+    
+    h2 {
+      color: var(--verde-escuro);
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+    
+    .search-box {
+      display: flex;
+      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+    }
+    
+    .search-box input {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .search-box input:focus {
+      border-color: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(43, 190, 26, 0.2);
+      outline: none;
+    }
+    
+    .search-box button {
+      padding: 0 2rem;
+      background-color: var(--verde-escuro);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .search-box button:hover {
+      background-color: var(--verde-claro);
+      transform: translateY(-2px);
+    }
+    
+    .result-container {
+      min-height: 120px;
+      padding: 1.5rem;
+      background-color: var(--cinza-claro);
+      border-radius: 8px;
+      border-left: 4px solid var(--amarelo);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+      margin-top: 2rem;
+    }
+    
+    .footer span {
+      color: var(--verde-escuro);
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
   <div class="header">
     <div class="logo">Oliveira Energia</div>
+    <div class="slogan">Com a graça de Deus • DESDE 1992</div>
   </div>
 
   <div class="container">
@@ -18,30 +137,23 @@
       <h2>Plataforma de Busca OS</h2>
       
       <div class="search-box">
-        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" 
-               aria-label="Campo de busca por código ou palavra-chave" />
-        <button onclick="buscar()" aria-label="Buscar">Buscar</button>
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave">
+        <button onclick="buscar()">Buscar</button>
       </div>
       
-      <div class="result-container" id="resultado" aria-live="polite">
-        <div class="result-placeholder">Digite um código ou palavra-chave acima...</div>
+      <div class="result-container" id="resultado">
+        <em>Digite um código ou palavra-chave acima...</em>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
+    Oliveira Energia © <span>2005</span> • Todos os direitos reservados
   </div>
 
-  <div class="notification" id="notification" role="alert"></div>
-
-  <!-- Script no final do body com defer -->
-  <script src="./js/script.js" defer></script>
-  
-  <!-- Script para ano atual -->
   <script>
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    // Seu código JavaScript aqui
+    document.querySelector('.footer span').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
-
