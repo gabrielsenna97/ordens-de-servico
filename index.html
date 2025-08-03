@@ -7,10 +7,29 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fdfdfc; /* Cor de fundo clara */
+      background-color: #f8f9fa;
       margin: 0;
       padding: 0;
       color: #333;
+    }
+    
+    .logo-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a3e72;
+    }
+    
+    .logo-subtitle {
+      font-size: 12px;
+      color: #666;
+      margin-top: -5px;
     }
     
     .container {
@@ -18,18 +37,19 @@
       margin: 0 auto;
       padding: 20px;
       background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
-      margin-top: 30px;
+      margin-top: 80px;
       margin-bottom: 30px;
+      position: relative;
     }
     
     h2 {
-      color: #069732; /* Verde escuro */
+      color: #1a3e72;
       text-align: center;
       margin-bottom: 30px;
       padding-bottom: 15px;
-      border-bottom: 2px solid #ffea00; /* Amarelo */
+      border-bottom: 2px solid #36b9cc;
     }
     
     .input-group {
@@ -47,12 +67,12 @@
     }
     
     .input-group input:focus {
-      border-color: #2fbe1a; /* Verde mais claro */
+      border-color: #36b9cc;
     }
     
     .input-group button {
       padding: 12px 20px;
-      background-color: #069732; /* Verde escuro */
+      background-color: #1a3e72;
       color: white;
       border: none;
       border-radius: 0 4px 4px 0;
@@ -62,7 +82,7 @@
     }
     
     .input-group button:hover {
-      background-color: #2fbe1a; /* Verde mais claro */
+      background-color: #2a4e82;
     }
     
     .resultado {
@@ -87,30 +107,14 @@
     
     .codigo {
       font-weight: bold;
-      color: #069732; /* Verde escuro */
+      color: #1a3e72;
       margin-bottom: 10px;
       font-size: 18px;
     }
     
-    .copiar-btn {
-      background: #069732; /* Verde escuro */
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.3s;
-      width: 100%;
-    }
-    
-    .copiar-btn:hover {
-      background: #2fbe1a; /* Verde mais claro */
-    }
-    
     /* Estilos para os botões de cópia individuais */
     .copiar-btn-individual {
-      background: #069732; /* Verde escuro */
+      background: #1a3e72;
       color: white;
       margin-left: 8px;
       font-size: 0.7rem;
@@ -122,7 +126,7 @@
     }
     
     .copiar-btn-individual:hover {
-      background: #2fbe1a; /* Verde mais claro */
+      background: #2a4e82;
     }
     
     .campo-copiavel {
@@ -130,7 +134,7 @@
       padding: 10px;
       background: #f8f9fc;
       border-radius: 4px;
-      border-left: 3px solid #ffea00; /* Amarelo */
+      border-left: 3px solid #36b9cc;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -143,27 +147,6 @@
       margin: 20px 0;
     }
     
-    /* Cabeçalho personalizado */
-    .header {
-      background-color: #069732; /* Verde escuro */
-      color: white;
-      padding: 15px 0;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    
-    .header .slogan {
-      font-style: italic;
-      font-size: 14px;
-      opacity: 0.8;
-      margin-top: 5px;
-    }
-    
     /* Rodapé */
     .footer {
       text-align: center;
@@ -172,19 +155,12 @@
       font-size: 12px;
       margin-top: 30px;
     }
-    
-    /* Destaques amarelos */
-    .destaque-amarelo {
-      background-color: #ffea00; /* Amarelo */
-      padding: 2px 5px;
-      border-radius: 3px;
-    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Oliveira Energia</h1>
-    <div class="slogan">Gerando Soluções. Criando Benefícios.</div>
+  <div class="logo-container">
+    <div class="logo">Oliveira Energia</div>
+    <div class="logo-subtitle">Com a graça de Deus • DESDE 1972</div>
   </div>
 
   <div class="container">
@@ -268,7 +244,7 @@
       if (itensEncontrados.length > 0) {
         resultado.innerHTML = itensEncontrados.map(item => `
           <div class="item-encontrado">
-            <div class="codigo">Código: <span class="destaque-amarelo">${item.CODIGO}</span></div>
+            <div class="codigo">Código: ${item.CODIGO}</div>
             
             <div class="campo-copiavel">
               <div><strong>OS:</strong> ${item.DESCRICAO_OS}</div>
@@ -284,8 +260,6 @@
               <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
               <button class="copiar-btn-individual" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">📋 Copiar Serviço</button>
             </div>
-            
-            <button class="copiar-btn" onclick="copiarItemCompleto('${item.CODIGO}')">📋 Copiar Tudo</button>
           </div>
           <hr>
         `).join('');
@@ -311,7 +285,7 @@
           notificacao.style.position = 'fixed';
           notificacao.style.bottom = '20px';
           notificacao.style.right = '20px';
-          notificacao.style.backgroundColor = '#069732'; /* Verde escuro */
+          notificacao.style.backgroundColor = '#1a3e72';
           notificacao.style.color = 'white';
           notificacao.style.padding = '10px 15px';
           notificacao.style.borderRadius = '4px';
@@ -327,15 +301,6 @@
           console.error('Erro ao copiar:', err);
           alert('Erro ao copiar texto');
         });
-    }
-
-    // Função para copiar todos os dados do item
-    function copiarItemCompleto(codigo) {
-      const item = banco.find(x => x.CODIGO === codigo);
-      if (item) {
-        const texto = `Código: ${item.CODIGO}\n\nOS: ${item.DESCRICAO_OS}\n\nSub-OS: ${item.DESCRICAO_SUB_OS}\n\nServiço: ${item.SERVICO_REALIZADO}`;
-        copiarTexto(texto, 'Todos os dados copiados!');
-      }
     }
 
     // Carrega os dados ao iniciar
