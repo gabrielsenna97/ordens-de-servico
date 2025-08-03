@@ -4,87 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Busca OS</title>
-  <style>
-    :root {
-      --verde-escuro: #069732;
-      --verde-claro: #2fbe1a;
-      --branco: #ffffff;
-      --cinza-claro: #f5f5f5;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--branco);
-    }
-    
-    .header {
-      background-color: var(--branco);
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .header-bar {
-      height: 8px;
-      background-color: var(--verde-escuro);
-    }
-    
-    .main {
-      padding: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    
-    .search-box {
-      display: flex;
-      margin: 20px 0;
-    }
-    
-    .search-box input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px 0 0 4px;
-    }
-    
-    .search-box button {
-      padding: 0 20px;
-      background-color: var(--verde-escuro);
-      color: white;
-      border: none;
-      border-radius: 0 4px 4px 0;
-      cursor: pointer;
-    }
-    
-    .result-item {
-      background: var(--cinza-claro);
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-    }
-    
-    .copy-btn {
-      background: var(--verde-escuro);
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-    
-    .notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--verde-escuro);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 4px;
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="header">
@@ -95,97 +15,14 @@
   <div class="main">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Digite código ou palavra-chave">
-      <button onclick="search()">Buscar</button>
+      <button id="searchButton">Buscar</button>
     </div>
     
-    <div id="resultsContainer">
-      <!-- Resultados aparecerão aqui -->
-    </div>
+    <div id="resultsContainer"></div>
   </div>
 
   <div class="notification" id="notification"></div>
 
-  <script>
-    // Dados modificados e organizados
-    const database = [
-      {
-        "CODIGO": "F003",
-        "DESCRICAO_OS": "Bucha",
-        "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
-        "SERVICO_REALIZADO": "Troca da junta do cárter e limpeza da área"
-      },
-      {
-        "CODIGO": "F008",
-        "DESCRICAO_OS": "Troca de bicos injetores",
-        "DESCRICAO_SUB_OS": "Alto consumo de combustível (0.265L/H)",
-        "SERVICO_REALIZADO": "Substituição dos bicos injetores e kit de vedação"
-      }
-      // Adicione outros códigos aqui...
-    ];
-
-    function search() {
-      const term = document.getElementById('searchInput').value.trim().toLowerCase();
-      const resultsContainer = document.getElementById('resultsContainer');
-      
-      if (!term) {
-        resultsContainer.innerHTML = '<p>Digite um termo para buscar</p>';
-        return;
-      }
-
-      const results = database.filter(item => 
-        item.CODIGO.toLowerCase().includes(term) ||
-        item.DESCRICAO_OS.toLowerCase().includes(term) ||
-        (item.DESCRICAO_SUB_OS && item.DESCRICAO_SUB_OS.toLowerCase().includes(term)) ||
-        (item.SERVICO_REALIZADO && item.SERVICO_REALIZADO.toLowerCase().includes(term))
-      );
-
-      displayResults(results);
-    }
-
-    function displayResults(results) {
-      const container = document.getElementById('resultsContainer');
-      
-      if (results.length === 0) {
-        container.innerHTML = '<p>Nenhum resultado encontrado</p>';
-        return;
-      }
-
-      container.innerHTML = results.map(item => `
-        <div class="result-item">
-          <h3>Código: ${item.CODIGO}</h3>
-          <p><strong>OS:</strong> ${item.DESCRICAO_OS} 
-            <button class="copy-btn" onclick="copyToClipboard('${escapeText(item.DESCRICAO_OS)}', 'OS copiada!')">Copiar</button>
-          </p>
-          ${item.DESCRICAO_SUB_OS ? `
-          <p><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}
-            <button class="copy-btn" onclick="copyToClipboard('${escapeText(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiada!')">Copiar</button>
-          </p>` : ''}
-          ${item.SERVICO_REALIZADO ? `
-          <p><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}
-            <button class="copy-btn" onclick="copyToClipboard('${escapeText(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
-          </p>` : ''}
-        </div>
-      `).join('');
-    }
-
-    function escapeText(text) {
-      return text ? text.replace(/'/g, "\\'").replace(/"/g, '\\"') : '';
-    }
-
-    function copyToClipboard(text, message) {
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          const notification = document.getElementById('notification');
-          notification.textContent = message;
-          notification.style.display = 'block';
-          setTimeout(() => { notification.style.display = 'none'; }, 2000);
-        });
-    }
-
-    // Permitir busca com Enter
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') search();
-    });
-  </script>
+  <script src="js/script.js"></script>
 </body>
 </html>
