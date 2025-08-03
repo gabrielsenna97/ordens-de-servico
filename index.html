@@ -1,198 +1,37 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <title>Busca Inteligente - Oliveira Energia</title>
-  <style>
-    /* ==== Faixa topo ==== */
-    header {
-      background-color: white;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      padding: 0 25px;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    header img {
-      height: 60px;
-      margin-right: 20px;
-    }
-    header h2 {
-      flex-grow: 1;
-      text-align: center;
-      color: #2e7d32; /* verde médio */
-      font-size: 2em;
-      font-weight: 700;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none;
-    }
+function filtrar() {
+  const termo = document.getElementById("busca").value.trim();
+  const container = document.getElementById("resultados");
+  let resultados = [];
 
-    /* ==== Estilo Geral ==== */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 0 20px 40px 20px;
-      background-color: #ffffff;
-      color: #2e4e1d;
-      max-width: 900px;
-      margin: auto;
-    }
+  if (termo === "") {
+    // Se estiver vazio, não mostrar nada
+    container.innerHTML = "";
+    return;
+  } else {
+    resultados = fuse.search(termo);
+  }
 
-    h1 {
-      color: #2e7d32;
-      border-bottom: 3px solid #ffcc33;
-      padding-bottom: 12px;
-      margin-bottom: 25px;
-      font-weight: 700;
-      font-size: 2.2em;
-      text-align: center;
-    }
+  container.innerHTML = "";
+  resultados.forEach((r) => {
+    const d = r.item;
+    container.innerHTML += `
+      <div class="os-card">
+        <div><strong>Código:</strong> ${d.CODIGO}</div>
+        <div>
+          <strong>Descrição:</strong> ${d.DESCRICAO_OS}
+          <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_OS.replace(/'/g, "\\'")}')">Copiar</button>
+        </div>
+        <div>
+          <strong>Sub:</strong> ${d.DESCRICAO_SUB_OS}
+          <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_SUB_OS.replace(/'/g, "\\'")}')">Copiar</button>
+        </div>
+        <div>
+          <strong>Serviço:</strong> ${d.SERVICO_REALIZADO}
+          <button class="copiar-btn" onclick="copiarTexto('${d.SERVICO_REALIZADO.replace(/'/g, "\\'")}')">Copiar</button>
+        </div>
+      </div>
+    `;
+  });
 
-    /* ==== Campo de busca ==== */
-    #busca {
-      padding: 14px 20px;
-      width: 100%;
-      font-size: 18px;
-      border: 2px solid #ffcc33;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      box-sizing: border-box;
-      outline-color: #2e7d32;
-      transition: border-color 0.3s ease;
-    }
-    #busca:focus {
-      border-color: #2e7d32;
-      box-shadow: 0 0 6px #2e7d32aa;
-    }
-
-    /* ==== Cartão de OS ==== */
-    .os-card {
-      background: #f9fff9;
-      padding: 20px 25px;
-      margin: 15px 0;
-      border-left: 8px solid #2e7d32;
-      border-radius: 12px;
-      box-shadow: 0 5px 10px rgba(46, 125, 50, 0.15);
-      transition: box-shadow 0.3s ease;
-    }
-    .os-card:hover {
-      box-shadow: 0 8px 15px rgba(46, 125, 50, 0.3);
-    }
-
-    .os-card strong {
-      color: #ff9800;
-      font-weight: 700;
-    }
-
-    /* ==== Botões de copiar ==== */
-    .copiar-btn {
-      margin-left: 12px;
-      padding: 6px 12px;
-      font-size: 13px;
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-      user-select: none;
-    }
-    .copiar-btn:hover {
-      background-color: #256428;
-    }
-
-    /* ==== Mensagem de nenhum resultado ==== */
-    p {
-      font-style: italic;
-      color: #888;
-      text-align: center;
-      margin-top: 50px;
-      font-size: 1.1em;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="olv.png" alt="Logo Oliveira Energia" />
-    <h2>Oliveira Energia</h2>
-  </header>
-
-  <h1>Consulta de OS</h1>
-  <input
-    type="text"
-    id="busca"
-    oninput="filtrar()"
-    placeholder="Buscar OS..."
-    autocomplete="off"
-    spellcheck="false"
-  />
-  <div id="resultados"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  <script>
-    /* === Parte funcional SEM ALTERAÇÃO === */
-    let dados = [];
-
-    async function carregarDados() {
-      const res = await fetch("dados.json");
-      dados = await res.json();
-      fuse = new Fuse(dados, {
-        keys: ["CODIGO", "DESCRICAO_OS", "DESCRICAO_SUB_OS", "SERVICO_REALIZADO"],
-        threshold: 0.4,
-        includeScore: true,
-      });
-      filtrar();
-    }
-
-    let fuse;
-
-    function copiarTexto(texto) {
-      navigator.clipboard
-        .writeText(texto)
-        .then(() => console.log("Copiado:", texto))
-        .catch((err) => console.error("Erro ao copiar:", err));
-    }
-
-    function filtrar() {
-      const termo = document.getElementById("busca").value.trim();
-      const container = document.getElementById("resultados");
-      let resultados = [];
-
-      if (termo === "") {
-        resultados = dados.map((d) => ({ item: d, score: 0 }));
-      } else {
-        resultados = fuse.search(termo);
-      }
-
-      container.innerHTML = "";
-      resultados.forEach((r) => {
-        const d = r.item;
-        container.innerHTML += `
-          <div class="os-card">
-            <div><strong>Código:</strong> ${d.CODIGO}</div>
-            <div>
-              <strong>Descrição:</strong> ${d.DESCRICAO_OS}
-              <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_OS.replace(/'/g, "\\'")}')">Copiar</button>
-            </div>
-            <div>
-              <strong>Sub:</strong> ${d.DESCRICAO_SUB_OS}
-              <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_SUB_OS.replace(/'/g, "\\'")}')">Copiar</button>
-            </div>
-            <div>
-              <strong>Serviço:</strong> ${d.SERVICO_REALIZADO}
-              <button class="copiar-btn" onclick="copiarTexto('${d.SERVICO_REALIZADO.replace(/'/g, "\\'")}')">Copiar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      if (resultados.length === 0) container.innerHTML = "<p>Nada encontrado.</p>";
-    }
-
-    carregarDados();
-  </script>
-</body>
-</html>
+  if (resultados.length === 0) container.innerHTML = "<p>Nada encontrado.</p>";
+}
