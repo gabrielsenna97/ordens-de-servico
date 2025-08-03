@@ -2,12 +2,39 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Busca Inteligente</title>
+  <title>Busca Inteligente - Oliveira Energia</title>
   <style>
+    /* ==== Faixa topo ==== */
+    header {
+      background-color: white;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 0 25px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    header h2 {
+      flex-grow: 1;
+      text-align: center;
+      color: #2e7d32; /* verde médio */
+      font-size: 2em;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+    }
+
     /* ==== Estilo Geral ==== */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
+      padding: 0 20px 40px 20px;
       background-color: #ffffff;
       color: #2e4e1d;
       max-width: 900px;
@@ -88,6 +115,11 @@
   </style>
 </head>
 <body>
+  <header>
+    <img src="olv.png" alt="Logo Oliveira Energia" />
+    <h2>Oliveira Energia</h2>
+  </header>
+
   <h1>Consulta de OS</h1>
   <input
     type="text"
