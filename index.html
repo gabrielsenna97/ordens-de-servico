@@ -143,7 +143,7 @@
         threshold: 0.4,
         includeScore: true,
       });
-      // filtrar();  <-- removi essa linha para não mostrar tudo inicialmente
+      // Aqui não chamamos filtrar() para deixar o início limpo
     }
 
     let fuse;
@@ -161,7 +161,6 @@
       let resultados = [];
 
       if (termo === "") {
-        // Não mostrar nada quando o campo estiver vazio
         container.innerHTML = "";
         return;
       } else {
