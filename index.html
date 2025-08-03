@@ -4,46 +4,147 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Busca OS - Oliveira Energia</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    :root {
+      --verde-escuro: #069732;
+      --verde-claro: #2fbe1a;
+      --amarelo: #ffea00;
+      --branco: #fdfdfc;
+      --cinza-claro: #f5f5f5;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--branco);
+    }
+    
+    /* Faixa verde no topo */
+    .top-bar {
+      background-color: var(--verde-escuro);
+      height: 60px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    /* Logo posicionada sobre a faixa verde */
+    .logo-container {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      z-index: 101;
+      height: 40px;
+    }
+    
+    .logo-container img {
+      height: 100%;
+      width: auto;
+    }
+    
+    /* Conteúdo principal */
+    .main-content {
+      margin-top: 80px;
+      padding: 20px;
+    }
+    
+    .card {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    
+    h1 {
+      color: var(--verde-escuro);
+      text-align: center;
+      margin-top: 0;
+    }
+    
+    .search-box {
+      display: flex;
+      margin: 20px 0;
+    }
+    
+    .search-box input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+    }
+    
+    .search-box button {
+      padding: 0 25px;
+      background-color: var(--verde-escuro);
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    .result-container {
+      min-height: 100px;
+      padding: 20px;
+      background-color: var(--cinza-claro);
+      border-radius: 4px;
+      border-left: 4px solid var(--amarelo);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Logo no canto superior esquerdo -->
+  <!-- Faixa verde no topo -->
+  <div class="top-bar"></div>
+  
+  <!-- Logo sem fundo posicionada sobre a faixa verde -->
   <div class="logo-container">
     <img src="olv.png" alt="Oliveira Energia">
   </div>
 
-  <!-- Cabeçalho -->
-  <div class="header">
-    <h1>Plataforma de Busca OS</h1>
-  </div>
-  
-  <!-- Conteúdo Principal -->
-  <div class="container">
+  <!-- Conteúdo principal -->
+  <div class="main-content">
     <div class="card">
+      <h1>Plataforma de Busca OS</h1>
+      
       <div class="search-box">
         <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave">
         <button onclick="buscar()">Buscar</button>
       </div>
       
       <div class="result-container" id="resultado">
-        <div class="result-placeholder">Digite um código ou palavra-chave acima...</div>
+        <em>Digite um código ou palavra-chave acima...</em>
       </div>
+    </div>
+    
+    <div class="footer">
+      Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
     </div>
   </div>
 
-  <!-- Rodapé -->
-  <div class="footer">
-    Oliveira Energia © <span id="current-year"></span> - Todos os direitos reservados
-  </div>
-
-  <!-- Notificação -->
-  <div class="notification" id="notification"></div>
-
-  <!-- Scripts -->
-  <script src="./js/script.js"></script>
   <script>
     // Atualiza o ano automaticamente
     document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Função de busca (exemplo)
+    function buscar() {
+      const termo = document.getElementById('busca').value;
+      alert('Buscando por: ' + termo);
+      // Implemente sua lógica de busca aqui
+    }
   </script>
 </body>
 </html>
