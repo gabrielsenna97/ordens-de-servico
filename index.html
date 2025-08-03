@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -223,6 +222,25 @@
       color: var(--verde-escuro);
     }
     
+    .loading {
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    
+    .error-message {
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 10px;
+      border-radius: 4px;
+      border-left: 4px solid #d32f2f;
+    }
+    
     @media (max-width: 768px) {
       .header-top {
         flex-direction: column;
@@ -282,7 +300,6 @@
   </style>
 </head>
 <body>
-  <!-- Cabeçalho modificado com logo à esquerda -->
   <div class="header-container">
     <div class="header-top">
       <div class="logo-container">
@@ -295,7 +312,6 @@
     <div class="top-bar-green"></div>
   </div>
 
-  <!-- Conteúdo principal -->
   <div class="main-content">
     <div class="card">
       <h1>Plataforma de Busca OS</h1>
@@ -306,7 +322,7 @@
       </div>
       
       <div class="result-container" id="resultado">
-        <em>Digite um código ou palavra-chave acima...</em>
+        <em class="loading">Carregando dados...</em>
       </div>
     </div>
     
@@ -315,47 +331,69 @@
     </div>
   </div>
 
-  <!-- Elemento de notificação -->
   <div class="notification" id="notification"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Dados mockados para exemplo
-      let banco = [
-        {
-          "CODIGO": "F083",
-          "DESCRICAO_OS": "Bucha",
-          "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
-          "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
-        },
-        {
-          "CODIGO": "F088",
-          "DESCRICAO_OS": "TROCA DE BICOS INJETORES",
-          "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO ALTO CONSUMO 0,268L/H",
-          "SERVICO_REALIZADO": ""
-        },
-        {
-          "CODIGO": "F090",
-          "DESCRICAO_OS": "MANUTENÇÃO PREVENTIVA",
-          "DESCRICAO_SUB_OS": "",
-          "SERVICO_REALIZADO": "COORDENCIALIA ACOMPANHAMENTO FOI IDENTIFICADO QUE O GRUPO SOLADOR ESTÁ APRESENTANDO ALTO CONSUMO 0,263 L/H. FOI REALIZADO CHEGUISTE E INVADO PARA ANÁLISE E APÓS AVALIAÇÃO FOI APROVADO A SUBSTITUIÇÃO DAS URNDEZS INJETORES. FOI REALIZADO A SUBSTITUIÇÃO DOS BICOS INJETORES, ARRIBA-LA DO VIDAÇÃO E RIT AMIL DE VIDAÇÃO DO INJETOR. FEITO INSPEÇÃO NAS BUCHAS DO SIGNATÂMICO, INSPEÇÃO NO FLITRO E AR, LIMPEZA DA VAQUINA SOLENDOS, SUBSTITUIÇÃO DOS FLITROS DE COMBUSTINTE PRIMÁRIO E SEGUNDARSE À LAUGURA EXTERNA E INTERNA, VARIELAMENTO DO BOJADOR, REALIZADO CRUDEMENTO DE ADMIN. MATERIAL ITIPIZADO NA CORRETOR DE BICO."
-        }
-      ];
-      let dadosCarregados = true;
-
-      // Atualiza o ano automaticamente
+      // Variáveis globais
+      let banco = [];
+      let dadosCarregados = false;
+      const resultado = document.getElementById('resultado');
+      
+      // Atualiza o ano no footer
       document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // 1. Carregar dados do JSON
+      carregarDados();
 
-      // Função de busca
+      async function carregarDados() {
+        try {
+          // Tenta carregar do arquivo JSON externo
+          const response = await fetch('dados.json');
+          
+          if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+          }
+          
+          banco = await response.json();
+          dadosCarregados = true;
+          resultado.innerHTML = '<em>Digite um código ou palavra-chave para buscar...</em>';
+          console.log('Dados carregados com sucesso:', banco);
+        } catch (error) {
+          console.error('Erro ao carregar JSON:', error);
+          
+          // Fallback com dados incorporados
+          banco = [
+            // Cole AQUI todo o seu JSON
+            {
+              "CODIGO": "F083",
+              "DESCRICAO_OS": "Bucha",
+              "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
+              "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
+            },
+            // ... (adicione todos os itens do seu JSON aqui)
+          ];
+          
+          dadosCarregados = true;
+          resultado.innerHTML = `
+            <div class="error-message">
+              <strong>Atenção:</strong> Dados carregados em modo offline.
+              <br><small>${error.message}</small>
+            </div>
+            <em>Digite um código ou palavra-chave para buscar...</em>
+          `;
+        }
+      }
+
+      // 2. Função de busca
       window.buscar = function() {
         if (!dadosCarregados) {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          resultado.innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
           return;
         }
         
         const termo = document.getElementById('busca').value.trim().toLowerCase();
-        const resultado = document.getElementById('resultado');
-
+        
         if (!termo) {
           resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
           return;
@@ -364,16 +402,13 @@
         const itensEncontrados = banco.filter(item => 
           Object.values(item).some(
             valor => valor && valor.toString().toLowerCase().includes(termo)
-          )
         );
 
         mostrarResultados(itensEncontrados, termo);
       };
 
-      // Mostra os resultados
+      // 3. Mostrar resultados
       function mostrarResultados(itens, termo) {
-        const resultado = document.getElementById('resultado');
-        
         if (itens.length === 0) {
           resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
           return;
@@ -402,7 +437,7 @@
         `).join('');
       }
 
-      // Função para escapar texto
+      // 4. Funções auxiliares
       function escapeTexto(texto) {
         if (!texto) return '';
         return texto.toString()
@@ -411,22 +446,19 @@
           .replace(/\n/g, '\\n');
       }
 
-      // Função para copiar texto
       window.copiarTexto = function(texto, mensagem) {
-        navigator.clipboard.writeText(texto)
+        const textoParaCopiar = texto.replace(/\\'/g, "'")
+                                   .replace(/\\"/g, '"')
+                                   .replace(/\\n/g, '\n');
+        
+        navigator.clipboard.writeText(textoParaCopiar)
           .then(() => {
             const notificacao = document.getElementById('notification');
             notificacao.textContent = mensagem;
             notificacao.style.display = 'block';
-            
-            setTimeout(() => {
-              notificacao.style.display = 'none';
-            }, 2000);
+            setTimeout(() => notificacao.style.display = 'none', 2000);
           })
-          .catch(err => {
-            console.error('Erro ao copiar:', err);
-            alert('Erro ao copiar texto');
-          });
+          .catch(err => console.error('Erro ao copiar:', err));
       };
     });
   </script>
