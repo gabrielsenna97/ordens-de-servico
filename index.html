@@ -1,123 +1,77 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <!-- [Manter todo o cabeçalho e CSS anteriores] -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Busca OS - Oliveira Energia</title>
 </head>
 <body>
-  <!-- [Manter toda a estrutura HTML anterior] -->
+  <header>
+    <div style="display: flex; align-items: center; padding: 15px 20px;">
+      <div style="height: 70px; margin-right: 20px;">
+        <img src="olv.png" alt="Oliveira Energia" style="height: 100%; max-width: 300px;">
+      </div>
+      <div style="background-color: #069732; color: white; padding: 10px 20px; font-size: 24px; font-weight: bold; border-radius: 4px; text-align: center; flex-grow: 1;">
+        OLIVEIRA ENERGIA
+      </div>
+    </div>
+    <div style="height: 8px; background-color: #2fbe1a; width: 100%;"></div>
+  </header>
+
+  <main style="margin-top: 108px; padding: 20px;">
+    <div style="max-width: 900px; margin: 0 auto; background-color: white; border-radius: 10px; padding: 30px; border-top: 5px solid #ffea00; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+      <h1 style="color: #069732; text-align: center; margin-top: 0; margin-bottom: 30px; font-size: 28px; text-transform: uppercase;">Plataforma de Busca OS</h1>
+      
+      <div style="margin: 25px 0;">
+        <p>Esta é uma versão estática sem funcionalidade de busca.</p>
+        <p>Aqui estão todas as ordens de serviço disponíveis:</p>
+      </div>
+      
+      <div style="padding: 25px; background-color: #f5f5f5; border-radius: 8px; border-left: 4px solid #ffea00;">
+        <!-- Ordem de Serviço 1 -->
+        <div style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #eee;">
+          <div style="color: #069732; font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #ffea00;">
+            <strong>Código:</strong> F001
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>OS:</strong> TROCA DE FILTROS</div>
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>Sub-OS:</strong> MAQUINA APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR</div>
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>Serviço:</strong> OCORRÊNCIA: GRUPO GERADOR APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR , APÓS INSPEÇÃO FOI CONSTATADO QUE OS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO ESTAVAM BASTANTE SUJOS, NECESSÁRIO A SUBSTITUIÇÃO. FOI REALIZADO A SUBSTITUIÇÃO DOS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO, FEITO INSPEÇÃO NAS MAGUEIRAS DE COMBUSTIVEL, FEITO INSPEÇÃO NA VALVULA SOLENOIDE, FORAM UTILIZADOS: 01 FILTRO PRIMÁRIO BOSCH (COD: 20620) 01 FILTRO SECUNDÁRIO BOSCH (COD: 20618) SERVIÇO REALIZADO POR (OPERADOR E MANTENEDOR).</div>
+          </div>
+        </div>
+
+        <!-- Ordem de Serviço 2 -->
+        <div style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #eee;">
+          <div style="color: #069732; font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #ffea00;">
+            <strong>Código:</strong> F002
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>OS:</strong> TROCA DE OLEO (PREVENTIVA 250 HORAS)</div>
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>Sub-OS:</strong> MANUTENÇÃO PREVENTIVA - 250 H ~ 13 DIAS (TROCA DE ÓLEO E FILTROS)</div>
+          </div>
+          <div style="margin: 15px 0; padding: 15px; background-color: #f5f5f5; border-radius: 6px;">
+            <div><strong>Serviço:</strong> FOI REALIZADO A TROCA DE OLEO, TROCA DO FILTRO DE OLEO, FEITO A COLETA DE AMOSTRA DE OLEO, LIMPEZA E INSPEÇÃO NA GALERIA DO FILTRO DE AR, LIMPEZA E TROCA DOS ORINGS E PLACA DE INSERÇÃO DO FILTRO CENTRIFUGO, INSPEÇÃO NAS MANGEIRAS DE COMBUSTIVEL, INSPEÇÃO DE LIMALHAS NO FILTRO DE OLEO, INSPEÇÃO NAS ENGRENAGENS INTERMEDIARIAS, FORAM UTILIZADOS: 39 LT ÓLEO MOBIL 15W40 (COD: 9071) 1 FILTRO DE ÓLEO LUBRIFICANTE (COD: 20619) 1 PLACA DE INSERÇÃO (COD: 11093) 1 KIT CONTRATO (COD: 9254) 1 ANEL CENTRIFUGO. (COD: 9873)1 ANEL CENTRIFUGO (COD: 9874) 1 ANEL DE VEDAÇÃO DO CENTRIFUGO (COD: 9875) 03 LTS ES COMPLEAT (COD.:1015) 01 LLC500 (COD.18025) 01 LT DESENGRAXANTE (COD.8945) SERVIÇO REALIZADO POR: (OPERADOR E MANTENEDOR).</div>
+          </div>
+        </div>
+
+        <!-- Adicione mais ordens de serviço conforme necessário -->
+      </div>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 25px; color: #666; margin-top: 40px; font-size: 14px;">
+    Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
+  </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 1. Variáveis globais
-      let banco = [];
-      let dadosCarregados = false;
-      const resultado = document.getElementById('resultado');
-      
-      // Atualiza o ano
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-      
-      // 2. Função principal de carregamento
-      function iniciarAplicacao() {
-        // Mostra status inicial
-        resultado.innerHTML = '<em class="loading">Carregando dados...</em>';
-        
-        // Tenta carregar de 3 formas diferentes
-        Promise.any([
-          carregarArquivoJSON('dados.json'),
-          carregarArquivoJSON('dados_os.json'),
-          carregarDadosFallback()
-        ])
-        .then(dados => {
-          banco = dados;
-          dadosCarregados = true;
-          mostrarStatus(`Pronto! ${banco.length} ordens de serviço carregadas.`);
-          console.log('Dados carregados:', banco);
-        })
-        .catch(error => {
-          console.error('Falha ao carregar dados:', error);
-          mostrarStatus('Erro ao carregar dados. Recarregue a página.', 'error');
-        });
-      }
-
-      // 3. Função para carregar arquivo JSON
-      async function carregarArquivoJSON(nomeArquivo) {
-        return new Promise(async (resolve, reject) => {
-          try {
-            const response = await fetch(nomeArquivo);
-            
-            if (!response.ok) {
-              reject(new Error(`Arquivo ${nomeArquivo} não encontrado`));
-              return;
-            }
-            
-            const dados = await response.json();
-            
-            // Validação básica do JSON
-            if (!Array.isArray(dados) {
-              reject(new Error(`O arquivo ${nomeArquivo} não contém um array válido`));
-              return;
-            }
-            
-            if (dados.length === 0) {
-              reject(new Error(`O arquivo ${nomeArquivo} está vazio`));
-              return;
-            }
-            
-            resolve(dados);
-          } catch (error) {
-            reject(error);
-          }
-        });
-      }
-
-      // 4. Fallback com dados incorporados
-      async function carregarDadosFallback() {
-        return new Promise((resolve) => {
-          // Simula um pequeno atraso para parecer natural
-          setTimeout(() => {
-            const dados = [
-              {
-                "CODIGO": "",
-                "DESCRICAO_OS": "TROCA DE FILTROS",
-                "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR",
-                "SERVICO_REALIZADO": "OCORRÊNCIA: GRUPO GERADOR APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR , APÓS INSPEÇÃO FOI CONSTATADO QUE OS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO ESTAVAM BASTANTE SUJOS, NECESSÁRIO A SUBSTITUIÇÃO. FOI REALIZADO A SUBSTITUIÇÃO DOS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO, FEITO INSPEÇÃO NAS MAGUEIRAS DE COMBUSTIVEL, FEITO INSPEÇÃO NA VALVULA SOLENOIDE, FORAM UTILIZADOS: 01 FILTRO PRIMÁRIO BOSCH (COD: 20620) 01 FILTRO SECUNDÁRIO BOSCH (COD: 20618) SERVIÇO REALIZADO POR (OPERADOR E MANTENEDOR)."
-              },
-              {
-                "CODIGO": "",
-                "DESCRICAO_OS": "TROCA DE OLEO (PREVENTIVA 250 HORAS)",
-                "DESCRICAO_SUB_OS": "MANUTENÇÃO PREVENTIVA - 250 H ~ 13 DIAS (TROCA DE ÓLEO E FILTROS)",
-                "SERVICO_REALIZADO": "FOI REALIZADO A TROCA DE OLEO, TROCA DO FILTRO DE OLEO, FEITO A COLETA DE AMOSTRA DE OLEO, LIMPEZA E INSPEÇÃO NA GALERIA DO FILTRO DE AR, LIMPEZA E TROCA DOS ORINGS E PLACA DE INSERÇÃO DO FILTRO CENTRIFUGO, INSPEÇÃO NAS MANGEIRAS DE COMBUSTIVEL, INSPEÇÃO DE LIMALHAS NO FILTRO DE OLEO, INSPEÇÃO NAS ENGRENAGENS INTERMEDIARIAS, FORAM UTILIZADOS: 39 LT ÓLEO MOBIL 15W40 (COD: 9071) 1 FILTRO DE ÓLEO LUBRIFICANTE (COD: 20619) 1 PLACA DE INSERÇÃO (COD: 11093) 1 KIT CONTRATO (COD: 9254) 1 ANEL CENTRIFUGO. (COD: 9873)1 ANEL CENTRIFUGO (COD: 9874) 1 ANEL DE VEDAÇÃO DO CENTRIFUGO (COD: 9875) 03 LTS ES COMPLEAT (COD.:1015) 01 LLC500 (COD.18025) 01 LT DESENGRAXANTE (COD.8945) SERVIÇO REALIZADO POR: (OPERADOR E MANTENEDOR)."
-              }
-              // Adicione aqui todos os outros itens do seu JSON
-            ];
-            
-            console.log('Usando dados fallback incorporados');
-            resolve(dados);
-          }, 500); // Pequeno atraso para melhor UX
-        });
-      }
-
-      // 5. Função para mostrar status
-      function mostrarStatus(mensagem, tipo = 'success') {
-        const classes = {
-          'success': 'success-message',
-          'error': 'error-message',
-          'info': 'info-message'
-        };
-        
-        resultado.innerHTML = `
-          <div class="${classes[tipo] || 'info-message'}">
-            ${mensagem}
-          </div>
-          <em>Digite um código ou palavra-chave para buscar...</em>
-        `;
-      }
-
-      // [Manter as funções buscar(), mostrarResultados(), escapeTexto() e copiarTexto() anteriores]
-
-      // 6. Inicializa a aplicação
-      iniciarAplicacao();
-    });
+    // Apenas para atualizar o ano automaticamente
+    document.getElementById('current-year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
