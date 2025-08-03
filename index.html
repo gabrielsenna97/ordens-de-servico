@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Busca de Códigos de Falha - Oliveira Energia</title>
+  <title>Plataforma de Busca de Códigos de Falha</title>
   <style>
     :root {
       --verde-escuro: #069732;
@@ -232,24 +232,21 @@
   </style>
 </head>
 <body>
-  <!-- Faixa branca grossa no topo com logo -->
   <div class="top-bar-white">
     <div class="logo-container">
       <img src="olv.png" alt="Oliveira Energia">
     </div>
   </div>
   
-  <!-- Faixa verde abaixo -->
   <div class="top-bar-green"></div>
 
-  <!-- Conteúdo principal -->
   <div class="main-content">
     <div class="card">
       <h1>Plataforma de Busca de Códigos de Falha</h1>
       
       <div class="search-box">
-        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" onkeypress="if(event.key === 'Enter') buscar()">
-        <button onclick="buscar()">Buscar</button>
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave">
+        <button id="btnBuscar">Buscar</button>
       </div>
       
       <div class="search-tips">
@@ -266,7 +263,6 @@
     </div>
   </div>
 
-  <!-- Elemento de notificação -->
   <div class="notification" id="notification"></div>
 
   <script>
@@ -275,8 +271,20 @@
       let banco = [];
       let dadosCarregados = false;
 
+      // Elementos DOM
+      const btnBuscar = document.getElementById('btnBuscar');
+      const inputBusca = document.getElementById('busca');
+      const resultado = document.getElementById('resultado');
+      const notification = document.getElementById('notification');
+
       // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
+
+      // Event listeners
+      btnBuscar.addEventListener('click', buscar);
+      inputBusca.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') buscar();
+      });
 
       // Carrega os dados ao iniciar
       carregarDados();
@@ -284,23 +292,45 @@
       // Função para carregar dados do JSON
       async function carregarDados() {
         try {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando banco de códigos de falha...</em>';
+          resultado.innerHTML = '<em class="loading">Carregando banco de códigos de falha...</em>';
           
-          // Aqui você pode substituir pelo caminho do seu arquivo JSON
+          // Simulando dados enquanto o JSON não está disponível
+          banco = [
+            {
+              "CODIGO": "F001",
+              "DESCRICAO_OS": "Falha elétrica no motor",
+              "DESCRICAO_SUB_OS": "Verificação da fiação e conexões",
+              "SERVICO_REALIZADO": "Substituição do cabo principal e teste realizado"
+            },
+            {
+              "CODIGO": "F002",
+              "DESCRICAO_OS": "Vazamento de óleo",
+              "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
+              "SERVICO_REALIZADO": "Troca da junta do cárter e limpeza da área"
+            }
+          ];
+          
+          dadosCarregados = true;
+          resultado.innerHTML = 
+            '<em>Banco de códigos carregado com sucesso! Digite um código ou palavra-chave para buscar.</em>' +
+            '<div class="search-tips">Total de códigos disponíveis: ' + banco.length + '</div>';
+          
+          // Caso queira carregar de um arquivo JSON real, descomente:
+          /*
           const response = await fetch('codigos_falha.json');
-          
           if (response.ok) {
             banco = await response.json();
             dadosCarregados = true;
-            document.getElementById('resultado').innerHTML = 
+            resultado.innerHTML = 
               '<em>Banco de códigos carregado com sucesso! Digite um código ou palavra-chave para buscar.</em>' +
               '<div class="search-tips">Total de códigos disponíveis: ' + banco.length + '</div>';
           } else {
             throw new Error('Falha ao carregar dados');
           }
+          */
         } catch (error) {
           console.error('Erro ao carregar dados:', error);
-          document.getElementById('resultado').innerHTML = 
+          resultado.innerHTML = 
             '<em class="error">Erro ao carregar os códigos de falha. Verifique:<br>' +
             '1. O arquivo JSON existe e está no local correto (codigos_falha.json)<br>' +
             '2. A conexão está ativa<br>' +
@@ -309,22 +339,21 @@
       }
 
       // Função de busca inteligente
-      window.buscar = function() {
+      function buscar() {
         if (!dadosCarregados) {
-          document.getElementById('resultado').innerHTML = 
+          resultado.innerHTML = 
             '<em class="loading">Banco de códigos ainda não carregado. Aguarde...</em>';
           return;
         }
         
-        const termo = document.getElementById('busca').value.trim().toLowerCase();
-        const resultado = document.getElementById('resultado');
+        const termo = inputBusca.value.trim().toLowerCase();
 
         if (!termo) {
           resultado.innerHTML = '<em>Por favor, digite um código ou palavra-chave para buscar.</em>';
           return;
         }
 
-        // Busca inteligente que procura em todos os campos
+        // Busca inteligente
         const itensEncontrados = banco.filter(item => {
           // Se o termo começa com F (código de falha), busca exata no campo CODIGO
           if (termo.startsWith('f') && item.CODIGO) {
@@ -340,12 +369,10 @@
         });
 
         mostrarResultados(itensEncontrados, termo);
-      };
+      }
 
       // Mostra os resultados formatados
       function mostrarResultados(itens, termo) {
-        const resultado = document.getElementById('resultado');
-        
         if (itens.length === 0) {
           resultado.innerHTML = 
             `<em>Nenhum código de falha encontrado para "${termo}".</em>` +
@@ -364,60 +391,58 @@
               </div>
               <div class="os-field">
                 <div><strong>Descrição:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
-                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'Descrição copiada!')">Copiar</button>
+                <button class="copy-btn" data-text="${escapeHtml(item.DESCRICAO_OS || '')}">Copiar</button>
               </div>
               ${item.DESCRICAO_SUB_OS ? `
               <div class="os-field">
                 <div><strong>Detalhes:</strong> ${item.DESCRICAO_SUB_OS}</div>
-                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Detalhes copiados!')">Copiar</button>
+                <button class="copy-btn" data-text="${escapeHtml(item.DESCRICAO_SUB_OS)}">Copiar</button>
               </div>` : ''}
               ${item.SERVICO_REALIZADO ? `
               <div class="os-field">
                 <div><strong>Solução:</strong> ${item.SERVICO_REALIZADO}</div>
-                <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Solução copiada!')">Copiar</button>
+                <button class="copy-btn" data-text="${escapeHtml(item.SERVICO_REALIZADO)}">Copiar</button>
               </div>` : ''}
             </div>
           `).join('')}`;
+
+        // Adiciona eventos de clique aos botões de copiar
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const textToCopy = this.getAttribute('data-text');
+            copiarTexto(textToCopy, 'Texto copiado!');
+          });
+        });
       }
 
-      // Função para escapar texto para exibição HTML
-      function escapeTexto(texto) {
-        if (!texto) return '';
-        return texto.toString()
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;")
-          .replace(/\n/g, '\\n');
+      // Função para escapar HTML
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
       }
 
       // Função para copiar texto para área de transferência
-      window.copiarTexto = function(texto, mensagem) {
-        // Remove as entidades HTML antes de copiar
-        const textoParaCopiar = texto
-          .replace(/&amp;/g, "&")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/&quot;/g, '"')
-          .replace(/&#039;/g, "'")
-          .replace(/\\n/g, '\n');
-          
-        navigator.clipboard.writeText(textoParaCopiar)
+      function copiarTexto(texto, mensagem) {
+        navigator.clipboard.writeText(texto)
           .then(() => {
-            const notificacao = document.getElementById('notification');
-            notificacao.textContent = mensagem;
-            notificacao.style.display = 'block';
+            notification.textContent = mensagem;
+            notification.style.display = 'block';
             
             setTimeout(() => {
-              notificacao.style.display = 'none';
+              notification.style.display = 'none';
             }, 2000);
           })
           .catch(err => {
             console.error('Erro ao copiar:', err);
-            alert('Erro ao copiar texto');
+            notification.textContent = 'Erro ao copiar texto';
+            notification.style.display = 'block';
+            setTimeout(() => {
+              notification.style.display = 'none';
+            }, 2000);
           });
-      };
+      }
     });
   </script>
 </body>
