@@ -7,30 +7,46 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Faixa branca grossa no topo -->
-  <div class="top-bar-white"></div>
-  
-  <!-- Faixa verde fina abaixo -->
-  <div class="top-bar-green"></div>
-  
-  <!-- Logo aumentada -->
-  <div class="logo-container">
-    <img src="olv.png" alt="Oliveira Energia">
+  <!-- Faixa branca grossa no topo com logo -->
+  <div class="top-bar-white">
+    <div class="logo-container">
+      <img src="olv.png" alt="Oliveira Energia">
+    </div>
   </div>
+  
+  <!-- Faixa verde abaixo -->
+  <div class="top-bar-green"></div>
 
   <!-- Conteúdo principal -->
   <div class="main-content">
-    <div class="container">
-      <div class="header">
-        <h1>Plataforma de Busca OS</h1>
+    <div class="card">
+      <h1>Plataforma de Busca OS</h1>
+      
+      <div class="search-box">
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave">
+        <button onclick="buscar()">Buscar</button>
       </div>
       
-      <div class="card">
-        <!-- Seu conteúdo de busca aqui -->
+      <div class="result-container" id="resultado">
+        <em>Digite um código ou palavra-chave acima...</em>
       </div>
+    </div>
+    
+    <div class="footer">
+      Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
     </div>
   </div>
 
-  <script src="js/script.js"></script>
+  <script>
+    // Atualiza o ano automaticamente
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Função de busca (exemplo)
+    function buscar() {
+      const termo = document.getElementById('busca').value;
+      alert('Buscando por: ' + termo);
+      // Implemente sua lógica de busca aqui
+    }
+  </script>
 </body>
 </html>
