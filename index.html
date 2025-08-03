@@ -37,21 +37,22 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 0 20px 40px 20px;
-      background-color: #f2f9f2; /* fundo verde muito suave */
-      color: #1b3b12; /* verde escuro para texto */
+      /* fundo degradê verde forte para verde claro */
+      background: linear-gradient(180deg, #1b4413 0%, #a0d490 100%);
+      color: #f0f9f0; /* texto claro para contraste */
       max-width: 900px;
       margin: auto;
     }
 
     h1 {
-      color: #2e7d32;
+      color: #d0f0c0; /* verde claro */
       border-bottom: 3px solid #ffcc33; /* amarelo */
       padding-bottom: 12px;
       margin-bottom: 25px;
       font-weight: 700;
       font-size: 2.2em;
       text-align: center;
-      text-shadow: 0 0 2px #a0d490;
+      text-shadow: 0 0 3px #255d00;
     }
 
     /* ==== Campo de busca ==== */
@@ -65,28 +66,32 @@
       box-sizing: border-box;
       outline-color: #2e7d32;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #e9f5e9; /* fundo branco esverdeado */
+      color: #1b4413;
     }
     #busca:focus {
       border-color: #2e7d32;
       box-shadow: 0 0 8px #2e7d32aa;
+      background-color: #d0f0c0;
     }
 
     /* ==== Cartão de OS ==== */
     .os-card {
-      background: #e9f5e9; /* verde claro */
+      background: #c4e1c0; /* verde claro */
       padding: 20px 25px;
       margin: 15px 0;
       border-left: 8px solid #2e7d32;
       border-radius: 12px;
-      box-shadow: 0 5px 10px rgba(46, 125, 50, 0.25);
+      box-shadow: 0 5px 10px rgba(46, 125, 50, 0.5);
       transition: box-shadow 0.3s ease;
+      color: #1b4413;
     }
     .os-card:hover {
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.5);
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.7);
     }
 
     .os-card strong {
-      color: #4caf50; /* verde vibrante */
+      color: #2e7d32; /* verde médio */
       font-weight: 700;
     }
 
@@ -110,10 +115,11 @@
     /* ==== Mensagem de nenhum resultado ==== */
     p {
       font-style: italic;
-      color: #666;
+      color: #d0f0c0;
       text-align: center;
       margin-top: 50px;
       font-size: 1.1em;
+      text-shadow: 0 0 3px #255d00;
     }
   </style>
 </head>
