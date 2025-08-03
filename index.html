@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
+      background-color: #fdfdfc; /* Branco gelo */
       margin: 0;
       padding: 0;
       color: #333;
@@ -23,13 +23,14 @@
     .logo {
       font-size: 24px;
       font-weight: bold;
-      color: #1a3e72;
+      color: #069732; /* Verde escuro */
     }
     
     .logo-subtitle {
       font-size: 12px;
       color: #666;
       margin-top: -5px;
+      font-style: italic;
     }
     
     .container {
@@ -37,7 +38,7 @@
       margin: 0 auto;
       padding: 20px;
       background-color: white;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
       margin-top: 80px;
       margin-bottom: 30px;
@@ -45,11 +46,11 @@
     }
     
     h2 {
-      color: #1a3e72;
+      color: #069732; /* Verde escuro */
       text-align: center;
       margin-bottom: 30px;
       padding-bottom: 15px;
-      border-bottom: 2px solid #36b9cc;
+      border-bottom: 2px solid #ffea00; /* Amarelo */
     }
     
     .input-group {
@@ -67,12 +68,12 @@
     }
     
     .input-group input:focus {
-      border-color: #36b9cc;
+      border-color: #2fbe1a; /* Verde claro */
     }
     
     .input-group button {
       padding: 12px 20px;
-      background-color: #1a3e72;
+      background-color: #069732; /* Verde escuro */
       color: white;
       border: none;
       border-radius: 0 4px 4px 0;
@@ -82,7 +83,7 @@
     }
     
     .input-group button:hover {
-      background-color: #2a4e82;
+      background-color: #2fbe1a; /* Verde claro */
     }
     
     .resultado {
@@ -107,14 +108,14 @@
     
     .codigo {
       font-weight: bold;
-      color: #1a3e72;
+      color: #069732; /* Verde escuro */
       margin-bottom: 10px;
       font-size: 18px;
     }
     
     /* Estilos para os botões de cópia individuais */
     .copiar-btn-individual {
-      background: #1a3e72;
+      background: #069732; /* Verde escuro */
       color: white;
       margin-left: 8px;
       font-size: 0.7rem;
@@ -126,7 +127,7 @@
     }
     
     .copiar-btn-individual:hover {
-      background: #2a4e82;
+      background: #2fbe1a; /* Verde claro */
     }
     
     .campo-copiavel {
@@ -134,7 +135,7 @@
       padding: 10px;
       background: #f8f9fc;
       border-radius: 4px;
-      border-left: 3px solid #36b9cc;
+      border-left: 3px solid #ffea00; /* Amarelo */
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -154,6 +155,13 @@
       color: #666;
       font-size: 12px;
       margin-top: 30px;
+    }
+    
+    /* Destaques amarelos */
+    .destaque-amarelo {
+      background-color: #ffea00; /* Amarelo */
+      padding: 2px 5px;
+      border-radius: 3px;
     }
   </style>
 </head>
@@ -244,7 +252,7 @@
       if (itensEncontrados.length > 0) {
         resultado.innerHTML = itensEncontrados.map(item => `
           <div class="item-encontrado">
-            <div class="codigo">Código: ${item.CODIGO}</div>
+            <div class="codigo">Código: <span class="destaque-amarelo">${item.CODIGO}</span></div>
             
             <div class="campo-copiavel">
               <div><strong>OS:</strong> ${item.DESCRICAO_OS}</div>
@@ -285,7 +293,7 @@
           notificacao.style.position = 'fixed';
           notificacao.style.bottom = '20px';
           notificacao.style.right = '20px';
-          notificacao.style.backgroundColor = '#1a3e72';
+          notificacao.style.backgroundColor = '#069732'; /* Verde escuro */
           notificacao.style.color = 'white';
           notificacao.style.padding = '10px 15px';
           notificacao.style.borderRadius = '4px';
