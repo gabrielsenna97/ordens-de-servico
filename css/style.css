@@ -39,9 +39,9 @@ body {
 }
 
 .logo-container img {
-  height: 80px;
+  height: 100px;
   width: auto;
-  max-width: 350px;
+  max-width: 450px;
 }
 
 .main-content {
