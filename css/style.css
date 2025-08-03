@@ -1,73 +1,129 @@
-/* REMOVA o padding-top do body e ajuste as faixas */
+:root {
+  --verde-escuro: #069732;
+  --verde-claro: #2fbe1a;
+  --branco: #ffffff;
+  --cinza-claro: #f5f5f5;
+  --cinza-escuro: #333333;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--branco);
-  /* Remova o padding-top daqui */
+  color: var(--cinza-escuro);
 }
 
-/* AJUSTE a top-bar-white para conter a logo grande */
-.top-bar-white {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 80px; /* Mude height para min-height */
+.header {
   background-color: var(--branco);
-  z-index: 100;
+  padding: 15px 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center; /* Centraliza verticalmente */
-  padding: 20px; /* Aumente o padding */
-}
-
-/* AJUSTE a faixa verde para acompanhar */
-.top-bar-green {
   position: fixed;
-  top: auto; /* Mude para auto */
-  bottom: 0; /* Coloca no final da top-bar-white */
-  left: 0;
   width: 100%;
-  height: 12px;
-  background-color: var(--verde-escuro);
+  top: 0;
   z-index: 100;
 }
 
-/* MANTENHA seu estilo da logo com pequenos ajustes */
-.logo-container {
-  display: flex;
-  align-items: center;
+.header-bar {
+  height: 8px;
+  background-color: var(--verde-escuro);
+  width: 100%;
 }
 
-.logo-container img {
-  height: 120px; /* Reduza um pouco para caber melhor */
-  width: auto;
-  max-width: 400px;
-  object-fit: contain;
-}
-
-/* ADICIONE espaço para o conteúdo principal */
-.main-content {
+.main {
   padding: 20px;
-  margin-top: 132px; /* Ajuste conforme a altura real do cabeçalho */
+  max-width: 1000px;
+  margin: 80px auto 20px;
 }
 
-/* RESPONSIVO para mobile */
+.search-box {
+  display: flex;
+  margin: 20px 0;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+}
+
+.search-box button {
+  padding: 0 20px;
+  background-color: var(--verde-escuro);
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.search-box button:hover {
+  background-color: #058529;
+}
+
+.result-item {
+  background: var(--cinza-claro);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border-left: 4px solid var(--verde-escuro);
+}
+
+.result-item h3 {
+  color: var(--verde-escuro);
+  margin-top: 0;
+}
+
+.copy-btn {
+  background: var(--verde-escuro);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--verde-escuro);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 4px;
+  display: none;
+  z-index: 1000;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
-  .top-bar-white {
-    min-height: 70px;
-    padding: 10px;
+  .main {
+    margin-top: 70px;
+    padding: 15px;
+  }
+  
+  .search-box {
     flex-direction: column;
-    align-items: flex-start;
   }
   
-  .logo-container img {
-    height: 80px;
-    max-width: 250px;
+  .search-box input {
+    border-radius: 4px;
+    margin-bottom: 10px;
   }
   
-  .main-content {
-    margin-top: 150px; /* Ajuste para mobile */
+  .search-box button {
+    border-radius: 4px;
+    padding: 12px;
   }
 }
