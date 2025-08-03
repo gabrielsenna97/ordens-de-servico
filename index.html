@@ -6,7 +6,7 @@
   <style>
     /* ==== Faixa topo ==== */
     header {
-      background-color: #e6f2e6; /* verde muito claro */
+      background-color: #fff9db; /* amarelo claro */
       height: 80px;
       display: flex;
       align-items: center;
@@ -16,6 +16,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      border-bottom: 3px solid #d32f2f; /* vermelho vivo */
     }
     header img {
       height: 60px;
@@ -44,7 +45,7 @@
 
     h1 {
       color: #2e7d32;
-      border-bottom: 3px solid #7ac142; /* verde claro */
+      border-bottom: 3px solid #ffcc33; /* amarelo */
       padding-bottom: 12px;
       margin-bottom: 25px;
       font-weight: 700;
@@ -58,7 +59,7 @@
       padding: 14px 20px;
       width: 100%;
       font-size: 18px;
-      border: 2px solid #7ac142;
+      border: 2px solid #ffcc33; /* amarelo */
       border-radius: 10px;
       margin-bottom: 30px;
       box-sizing: border-box;
@@ -72,7 +73,7 @@
 
     /* ==== Cartão de OS ==== */
     .os-card {
-      background: #e9f5e9; /* verde bem claro */
+      background: #e9f5e9; /* verde claro */
       padding: 20px 25px;
       margin: 15px 0;
       border-left: 8px solid #2e7d32;
@@ -145,7 +146,6 @@
         threshold: 0.4,
         includeScore: true,
       });
-      // início limpo sem resultados
     }
 
     let fuse;
