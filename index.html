@@ -3,31 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plataforma de Busca OS</title>
+  <title>Plataforma de Busca OS - Oliveira Energia</title>
   <style>
-    /* ... (mantenha todos os estilos anteriores) ... */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
     
-    /* Novos estilos para os botões de cópia individuais */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    
+    h2 {
+      color: #1a3e72; /* Azul escuro similar ao logo */
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #36b9cc;
+    }
+    
+    .input-group {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .input-group input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+      outline: none;
+    }
+    
+    .input-group input:focus {
+      border-color: #36b9cc;
+    }
+    
+    .input-group button {
+      padding: 12px 20px;
+      background-color: #1a3e72; /* Azul escuro */
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    .input-group button:hover {
+      background-color: #2a4e82;
+    }
+    
+    .resultado {
+      min-height: 100px;
+      padding: 15px;
+      background-color: #f8f9fc;
+      border-radius: 4px;
+    }
+    
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+    
+    .item-encontrado {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .codigo {
+      font-weight: bold;
+      color: #1a3e72;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    
+    .copiar-btn {
+      background: #36b9cc; /* Azul ciano similar ao logo */
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    
+    .copiar-btn:hover {
+      background: #2c9faf;
+    }
+    
+    /* Estilos para os botões de cópia individuais */
     .copiar-btn-individual {
-      background: #36b9cc;
+      background: #1a3e72;
+      color: white;
       margin-left: 8px;
       font-size: 0.7rem;
       padding: 4px 8px;
       border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
+    
     .copiar-btn-individual:hover {
-      background: #2c9faf;
+      background: #2a4e82;
     }
+    
     .campo-copiavel {
       margin: 8px 0;
-      padding: 8px;
+      padding: 10px;
       background: #f8f9fc;
       border-radius: 4px;
-      border-left: 3px solid #4e73df;
+      border-left: 3px solid #36b9cc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    hr {
+      border: 0;
+      height: 1px;
+      background-color: #eee;
+      margin: 20px 0;
+    }
+    
+    /* Cabeçalho personalizado */
+    .header {
+      background-color: #1a3e72;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .header .slogan {
+      font-style: italic;
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
+    
+    /* Rodapé */
+    .footer {
+      text-align: center;
+      padding: 15px;
+      color: #666;
+      font-size: 12px;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
+  <div class="header">
+    <h1>Oliveira Energia</h1>
+    <div class="slogan">Gerando Soluções. Criando Benefícios.</div>
+  </div>
+
   <div class="container">
     <h2>🔍 Plataforma de Busca OS</h2>
 
@@ -39,6 +191,10 @@
     <div class="resultado" id="resultado">
       <em>Carregando dados de manutenção...</em>
     </div>
+  </div>
+
+  <div class="footer">
+    Oliveira Energia © 2023 - Todos os direitos reservados
   </div>
 
   <script>
@@ -108,17 +264,17 @@
             <div class="codigo">Código: ${item.CODIGO}</div>
             
             <div class="campo-copiavel">
-              <strong>OS:</strong> ${item.DESCRICAO_OS}
+              <div><strong>OS:</strong> ${item.DESCRICAO_OS}</div>
               <button class="copiar-btn-individual" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS)}', 'OS copiado!')">📋 Copiar OS</button>
             </div>
             
             <div class="campo-copiavel">
-              <strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}
+              <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
               <button class="copiar-btn-individual" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">📋 Copiar Sub-OS</button>
             </div>
             
             <div class="campo-copiavel">
-              <strong>Serviço:</strong> ${item.SERVICO_REALIZADO}
+              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
               <button class="copiar-btn-individual" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">📋 Copiar Serviço</button>
             </div>
             
@@ -148,11 +304,12 @@
           notificacao.style.position = 'fixed';
           notificacao.style.bottom = '20px';
           notificacao.style.right = '20px';
-          notificacao.style.backgroundColor = '#1cc88a';
+          notificacao.style.backgroundColor = '#1a3e72';
           notificacao.style.color = 'white';
-          notificacao.style.padding = '10px';
+          notificacao.style.padding = '10px 15px';
           notificacao.style.borderRadius = '4px';
           notificacao.style.zIndex = '1000';
+          notificacao.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
           document.body.appendChild(notificacao);
           
           setTimeout(() => {
