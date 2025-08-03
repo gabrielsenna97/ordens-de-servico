@@ -1,62 +1,64 @@
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-<script>
-  let dados = [];
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Busca Inteligente</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .os-card { background: #fff; padding: 10px; margin: 10px 0; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Consulta de OS</h1>
+  <input type="text" id="busca" oninput="filtrar()" placeholder="Buscar OS...">
+  <div id="resultados"></div>
 
-  async function carregarDados() {
-    const res = await fetch('dados.json');
-    dados = await res.json();
-    inicializarBusca();
-  }
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script>
+    let dados = [];
 
-  let fuse;
-
-  function inicializarBusca() {
-    const opcoes = {
-      keys: [
-        "CODIGO",
-        "DESCRICAO_OS",
-        "DESCRICAO_SUB_OS",
-        "SERVICO_REALIZADO"
-      ],
-      threshold: 0.4, // sensibilidade da busca (0 = exato, 1 = muito flexível)
-      includeScore: true
-    };
-
-    fuse = new Fuse(dados, opcoes);
-    filtrar(); // mostra todos ao carregar
-  }
-
-  function filtrar() {
-    const termo = document.getElementById('busca').value.trim();
-
-    let resultados = [];
-    if (termo === "") {
-      resultados = dados.map(d => ({ item: d, score: 0 }));
-    } else {
-      resultados = fuse.search(termo);
+    async function carregarDados() {
+      const res = await fetch('dados.json');
+      dados = await res.json();
+      fuse = new Fuse(dados, {
+        keys: ["CODIGO", "DESCRICAO_OS", "DESCRICAO_SUB_OS", "SERVICO_REALIZADO"],
+        threshold: 0.4,
+        includeScore: true
+      });
+      filtrar();
     }
 
-    const container = document.getElementById('resultados');
-    container.innerHTML = "";
+    let fuse;
 
-    resultados.sort((a, b) => a.score - b.score); // ordena por relevância
+    function filtrar() {
+      const termo = document.getElementById('busca').value.trim();
+      const container = document.getElementById('resultados');
+      let resultados = [];
 
-    resultados.forEach(r => {
-      const item = r.item;
-      container.innerHTML += `
-        <div class="os-card">
-          <div class="codigo">Código: ${item.CODIGO}</div>
-          <div><strong>Descrição OS:</strong> ${item.DESCRICAO_OS}</div>
-          <div><strong>Sub OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-          <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
-        </div>
-      `;
-    });
+      if (termo === "") {
+        resultados = dados.map(d => ({ item: d, score: 0 }));
+      } else {
+        resultados = fuse.search(termo);
+      }
 
-    if (resultados.length === 0) {
-      container.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+      container.innerHTML = "";
+      resultados.forEach(r => {
+        const d = r.item;
+        container.innerHTML += `
+          <div class="os-card">
+            <div><strong>Código:</strong> ${d.CODIGO}</div>
+            <div><strong>Descrição:</strong> ${d.DESCRICAO_OS}</div>
+            <div><strong>Sub:</strong> ${d.DESCRICAO_SUB_OS}</div>
+            <div><strong>Serviço:</strong> ${d.SERVICO_REALIZADO}</div>
+          </div>
+        `;
+      });
+
+      if (resultados.length === 0) container.innerHTML = "<p>Nada encontrado.</p>";
     }
-  }
 
-  carregarDados();
-</script>
+    carregarDados();
+  </script>
+</body>
+</html>
