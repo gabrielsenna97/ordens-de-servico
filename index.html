@@ -1,75 +1,361 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <!-- [Cabeçalho e CSS permanecem iguais] -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Busca OS - Oliveira Energia</title>
+  <style>
+    :root {
+      --verde-escuro: #069732;
+      --verde-medio: #1a8c3d;
+      --verde-claro: #2fbe1a;
+      --amarelo: #ffea00;
+      --branco: #ffffff;
+      --cinza-claro: #f5f5f5;
+      --cinza-escuro: #333333;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--branco);
+      color: var(--cinza-escuro);
+    }
+    
+    .header-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background-color: var(--branco);
+    }
+    
+    .header-top {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+    }
+    
+    .logo-container {
+      height: 70px;
+      margin-right: 20px;
+    }
+    
+    .logo-container img {
+      height: 100%;
+      width: auto;
+      max-width: 300px;
+    }
+    
+    .company-header {
+      background-color: var(--verde-escuro);
+      color: white;
+      padding: 10px 20px;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      flex-grow: 1;
+      text-align: center;
+    }
+    
+    .top-bar-green {
+      height: 8px;
+      background-color: var(--verde-claro);
+      width: 100%;
+    }
+    
+    .main-content {
+      margin-top: 108px;
+      padding: 20px;
+    }
+    
+    .card {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-top: 5px solid var(--amarelo);
+    }
+    
+    h1 {
+      color: var(--verde-escuro);
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .search-box {
+      display: flex;
+      margin: 25px 0;
+    }
+    
+    .search-box input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 2px solid #ddd;
+      border-radius: 6px 0 0 6px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .search-box input:focus {
+      border-color: var(--verde-medio);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(6, 151, 50, 0.2);
+    }
+    
+    .search-box button {
+      padding: 0 30px;
+      background-color: var(--verde-escuro);
+      color: white;
+      border: none;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .search-box button:hover {
+      background-color: var(--verde-medio);
+    }
+    
+    .result-container {
+      min-height: 100px;
+      padding: 25px;
+      background-color: var(--cinza-claro);
+      border-radius: 8px;
+      border-left: 4px solid var(--amarelo);
+    }
+    
+    .item-resultado {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+    
+    .codigo-resultado {
+      color: var(--verde-escuro);
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--amarelo);
+    }
+    
+    .os-field {
+      margin: 15px 0;
+      padding: 15px;
+      background-color: var(--cinza-claro);
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .os-field div {
+      flex: 1;
+    }
+    
+    .copy-btn {
+      background: var(--verde-escuro);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-left: 15px;
+      white-space: nowrap;
+    }
+    
+    .copy-btn:hover {
+      background: var(--verde-medio);
+      transform: translateY(-2px);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+      margin-top: 40px;
+      font-size: 14px;
+      background-color: var(--branco);
+      border-radius: 8px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--verde-escuro);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+      font-weight: 500;
+    }
+    
+    em {
+      color: #666;
+      font-style: italic;
+    }
+    
+    strong {
+      color: var(--verde-escuro);
+    }
+    
+    @media (max-width: 768px) {
+      .header-top {
+        flex-direction: column;
+        padding: 10px;
+      }
+      
+      .logo-container {
+        height: 60px;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      
+      .company-header {
+        font-size: 20px;
+        padding: 8px 15px;
+        width: 100%;
+      }
+      
+      .main-content {
+        margin-top: 148px;
+        padding: 15px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .search-box {
+        flex-direction: column;
+      }
+      
+      .search-box input {
+        border-radius: 6px;
+        margin-bottom: 10px;
+      }
+      
+      .search-box button {
+        border-radius: 6px;
+        padding: 12px;
+      }
+      
+      .os-field {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .copy-btn {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- [Estrutura HTML permanece igual] -->
+  <!-- Cabeçalho modificado com logo à esquerda -->
+  <div class="header-container">
+    <div class="header-top">
+      <div class="logo-container">
+        <img src="olv.png" alt="Oliveira Energia">
+      </div>
+      <div class="company-header">
+        OLIVEIRA ENERGIA
+      </div>
+    </div>
+    <div class="top-bar-green"></div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <div class="card">
+      <h1>Plataforma de Busca OS</h1>
+      
+      <div class="search-box">
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" onkeypress="if(event.key === 'Enter') buscar()">
+        <button onclick="buscar()">Buscar</button>
+      </div>
+      
+      <div class="result-container" id="resultado">
+        <em>Digite um código ou palavra-chave acima...</em>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
+    </div>
+  </div>
+
+  <!-- Elemento de notificação -->
+  <div class="notification" id="notification"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Variáveis globais
-      let banco = [];
-      let dadosCarregados = false;
-      const resultado = document.getElementById('resultado');
-      
+      // Dados mockados para exemplo
+      let banco = [
+        {
+          "CODIGO": "F083",
+          "DESCRICAO_OS": "Bucha",
+          "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
+          "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
+        },
+        {
+          "CODIGO": "F088",
+          "DESCRICAO_OS": "TROCA DE BICOS INJETORES",
+          "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO ALTO CONSUMO 0,268L/H",
+          "SERVICO_REALIZADO": ""
+        },
+        {
+          "CODIGO": "F090",
+          "DESCRICAO_OS": "MANUTENÇÃO PREVENTIVA",
+          "DESCRICAO_SUB_OS": "",
+          "SERVICO_REALIZADO": "COORDENCIALIA ACOMPANHAMENTO FOI IDENTIFICADO QUE O GRUPO SOLADOR ESTÁ APRESENTANDO ALTO CONSUMO 0,263 L/H. FOI REALIZADO CHEGUISTE E INVADO PARA ANÁLISE E APÓS AVALIAÇÃO FOI APROVADO A SUBSTITUIÇÃO DAS URNDEZS INJETORES. FOI REALIZADO A SUBSTITUIÇÃO DOS BICOS INJETORES, ARRIBA-LA DO VIDAÇÃO E RIT AMIL DE VIDAÇÃO DO INJETOR. FEITO INSPEÇÃO NAS BUCHAS DO SIGNATÂMICO, INSPEÇÃO NO FLITRO E AR, LIMPEZA DA VAQUINA SOLENDOS, SUBSTITUIÇÃO DOS FLITROS DE COMBUSTINTE PRIMÁRIO E SEGUNDARSE À LAUGURA EXTERNA E INTERNA, VARIELAMENTO DO BOJADOR, REALIZADO CRUDEMENTO DE ADMIN. MATERIAL ITIPIZADO NA CORRETOR DE BICO."
+        }
+      ];
+      let dadosCarregados = true;
+
       // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
-      
-      // Carrega os dados do JSON
-      carregarDados();
 
-      // Função para carregar os dados do JSON
-      function carregarDados() {
-        resultado.innerHTML = '<em class="loading">Carregando dados...</em>';
-        
-        // Substitua pelo caminho correto do seu arquivo JSON
-        fetch('dados.json')
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Erro ao carregar o arquivo JSON');
-            }
-            return response.json();
-          })
-          .then(data => {
-            banco = data;
-            dadosCarregados = true;
-            resultado.innerHTML = '<em>Digite um código ou palavra-chave para buscar...</em>';
-            console.log('Dados carregados com sucesso:', banco); // Para debug
-          })
-          .catch(error => {
-            console.error('Erro ao carregar dados:', error);
-            resultado.innerHTML = `
-              <em>Erro ao carregar os dados:</em>
-              <p>${error.message}</p>
-              <p>Verifique se o arquivo dados.json existe e está no formato correto.</p>
-            `;
-            
-            // Fallback com dados mockados
-            banco = [
-              {
-                "CODIGO": "F083",
-                "DESCRICAO_OS": "Bucha",
-                "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
-                "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
-              }
-            ];
-            dadosCarregados = true;
-            console.log('Usando dados mockados como fallback');
-          });
-      }
-
-      // [Restante do código permanece igual...]
-      
       // Função de busca
       window.buscar = function() {
         if (!dadosCarregados) {
-          resultado.innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
           return;
         }
         
         const termo = document.getElementById('busca').value.trim().toLowerCase();
-        
+        const resultado = document.getElementById('resultado');
+
         if (!termo) {
           resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
           return;
@@ -78,12 +364,70 @@
         const itensEncontrados = banco.filter(item => 
           Object.values(item).some(
             valor => valor && valor.toString().toLowerCase().includes(termo)
+          )
         );
 
         mostrarResultados(itensEncontrados, termo);
       };
 
-      // [Demais funções permanecem iguais...]
+      // Mostra os resultados
+      function mostrarResultados(itens, termo) {
+        const resultado = document.getElementById('resultado');
+        
+        if (itens.length === 0) {
+          resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
+          return;
+        }
+
+        resultado.innerHTML = itens.map(item => `
+          <div class="item-resultado">
+            <div class="codigo-resultado">
+              <strong>Código:</strong> ${item.CODIGO || 'N/A'}
+            </div>
+            <div class="os-field">
+              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
+            </div>
+            ${item.DESCRICAO_SUB_OS ? `
+            <div class="os-field">
+              <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
+            </div>` : ''}
+            ${item.SERVICO_REALIZADO ? `
+            <div class="os-field">
+              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
+            </div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      // Função para escapar texto
+      function escapeTexto(texto) {
+        if (!texto) return '';
+        return texto.toString()
+          .replace(/'/g, "\\'")
+          .replace(/"/g, '\\"')
+          .replace(/\n/g, '\\n');
+      }
+
+      // Função para copiar texto
+      window.copiarTexto = function(texto, mensagem) {
+        navigator.clipboard.writeText(texto)
+          .then(() => {
+            const notificacao = document.getElementById('notification');
+            notificacao.textContent = mensagem;
+            notificacao.style.display = 'block';
+            
+            setTimeout(() => {
+              notificacao.style.display = 'none';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Erro ao copiar:', err);
+            alert('Erro ao copiar texto');
+          });
+      };
     });
   </script>
 </body>
