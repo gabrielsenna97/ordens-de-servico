@@ -1,56 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca de Ordens de Serviço</title>
+    <title>Busca Inteligente de Ordens de Serviço</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
         .search-container {
             margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
         }
-        #searchInput {
-            padding: 10px;
-            width: 300px;
+        input, button {
+            padding: 8px;
             font-size: 16px;
         }
-        #searchButton {
-            padding: 10px 15px;
-            background-color: #069732;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        .os-item {
+        th, td {
             border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            padding: 8px;
+            text-align: left;
         }
-        .os-codigo {
-            font-weight: bold;
-            color: #069732;
-            font-size: 18px;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
+        th {
+            background-color: #f2f2f2;
         }
-        .os-campo {
-            margin-bottom: 10px;
-        }
-        .os-campo strong {
-            color: #333;
-        }
-        #resultsCount {
-            margin: 10px 0;
-            font-style: italic;
+        .no-results {
             color: #666;
+            font-style: italic;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -58,68 +44,86 @@
     <h1>Busca de Ordens de Serviço</h1>
     
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Digite código, descrição ou serviço..." onkeyup="buscarOS()">
-        <button id="searchButton" onclick="buscarOS()">Buscar</button>
-        <div id="resultsCount"></div>
+        <input type="text" id="searchInput" placeholder="Digite sua busca...">
+        <button onclick="buscarOrdens()">Buscar</button>
     </div>
     
-    <div id="resultsContainer"></div>
+    <div id="resultsContainer">
+        <!-- Os resultados serão exibidos aqui -->
+    </div>
 
     <script>
-        // Seus dados de ordens de serviço
-        const ordensServico = [
-          {
-            "CODIGO": "",
-            "DESCRICAO_OS": "TROCA DE FILTROS",
-            "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR",
-            "SERVICO_REALIZADO": "OCORRÊNCIA: GRUPO GERADOR APRESENTANDO BAIXA PRESSÃO DE COMBUSTIVEL 3,8BAR , APÓS INSPEÇÃO FOI CONSTATADO QUE OS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO ESTAVAM BASTANTE SUJOS, NECESSÁRIO A SUBSTITUIÇÃO. FOI REALIZADO A SUBSTITUIÇÃO DOS FILTROS DE COMBUSTIVEL PRIMARIO E SECUNDARIO, FEITO INSPEÇÃO NAS MAGUEIRAS DE COMBUSTIVEL, FEITO INSPEÇÃO NA VALVULA SOLENOIDE, FORAM UTILIZADOS: 01 FILTRO PRIMÁRIO BOSCH (COD: 20620) 01 FILTRO SECUNDÁRIO BOSCH (COD: 20618) SERVIÇO REALIZADO POR (OPERADOR E MANTENEDOR)."
-          },
-          {
-            "CODIGO": "",
-            "DESCRICAO_OS": "TROCA DE OLEO (PREVENTIVA 250 HORAS)",
-            "DESCRICAO_SUB_OS": "MANUTENÇÃO PREVENTIVA - 250 H ~ 13 DIAS (TROCA DE ÓLEO E FILTROS)",
-            "SERVICO_REALIZADO": "FOI REALIZADO A TROCA DE OLEO, TROCA DO FILTRO DE OLEO, FEITO A COLETA DE AMOSTRA DE OLEO, LIMPEZA E INSPEÇÃO NA GALERIA DO FILTRO DE AR, LIMPEZA E TROCA DOS ORINGS E PLACA DE INSERÇÃO DO FILTRO CENTRIFUGO, INSPEÇÃO NAS MANGEIRAS DE COMBUSTIVEL, INSPEÇÃO DE LIMALHAS NO FILTRO DE OLEO, INSPEÇÃO NAS ENGRENAGENS INTERMEDIARIAS, FORAM UTILIZADOS: 39 LT ÓLEO MOBIL 15W40 (COD: 9071) 1 FILTRO DE ÓLEO LUBRIFICANTE (COD: 20619) 1 PLACA DE INSERÇÃO (COD: 11093) 1 KIT CONTRATO (COD: 9254) 1 ANEL CENTRIFUGO. (COD: 9873)1 ANEL CENTRIFUGO (COD: 9874) 1 ANEL DE VEDAÇÃO DO CENTRIFUGO (COD: 9875) 03 LTS ES COMPLEAT (COD.:1015) 01 LLC500 (COD.18025) 01 LT DESENGRAXANTE (COD.8945) SERVIÇO REALIZADO POR: (OPERADOR E MANTENEDOR)."
-          }
-          // Adicione aqui outras ordens de serviço conforme necessário
+        // Dados de exemplo (substitua pelos seus dados reais do JSON)
+        const ordensDeServico = [
+            { id: 1, descricao: "Troca de bucha dianteira", cliente: "João Silva", status: "Concluído" },
+            { id: 2, descricao: "Alinhamento e balanceamento", cliente: "Maria SOUZA", status: "Pendente" },
+            { id: 3, descricao: "Reparo no amortecedor", cliente: "Carlos Oliveira", status: "Em andamento" },
+            { id: 4, descricao: "Substituição da bucha traseira", cliente: "Ana Cândido", status: "Concluído" },
+            { id: 5, descricao: "Revisão geral", cliente: "Pedro Álvares", status: "Cancelado" }
         ];
 
-        function buscarOS() {
-            const termo = document.getElementById('searchInput').value.toLowerCase();
-            const resultados = ordensServico.filter(os => 
-                (os.CODIGO && os.CODIGO.toLowerCase().includes(termo)) ||
-                (os.DESCRICAO_OS && os.DESCRICAO_OS.toLowerCase().includes(termo)) ||
-                (os.DESCRICAO_SUB_OS && os.DESCRICAO_SUB_OS.toLowerCase().includes(termo)) ||
-                (os.SERVICO_REALIZADO && os.SERVICO_REALIZADO.toLowerCase().includes(termo))
-            );
-
-            mostrarResultados(resultados);
+        // Função para normalizar o texto (remove acentos, espaços extras, converte para minúsculas)
+        function normalizarTexto(texto) {
+            return texto
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, ' ').trim();
         }
 
-        function mostrarResultados(resultados) {
+        // Função principal de busca
+        function buscarOrdens() {
+            const termo = document.getElementById('searchInput').value;
+            const termoNormalizado = normalizarTexto(termo);
+            const resultados = [];
+            
+            // Percorre todas as ordens de serviço
+            for (const ordem of ordensDeServico) {
+                // Verifica em todos os campos da ordem
+                for (const key in ordem) {
+                    if (typeof ordem[key] === 'string') {
+                        const valorNormalizado = normalizarTexto(ordem[key]);
+                        if (valorNormalizado.includes(termoNormalizado)) {
+                            resultados.push(ordem);
+                            break; // Se encontrou em um campo, não precisa verificar os outros
+                        }
+                    }
+                }
+            }
+            
+            // Exibe os resultados
+            exibirResultados(resultados);
+        }
+
+        // Função para exibir os resultados na página
+        function exibirResultados(resultados) {
             const container = document.getElementById('resultsContainer');
-            const contador = document.getElementById('resultsCount');
             
             if (resultados.length === 0) {
-                container.innerHTML = '<div class="os-item">Nenhuma ordem de serviço encontrada.</div>';
-                contador.textContent = '';
+                container.innerHTML = '<p class="no-results">Nenhuma ordem de serviço encontrada.</p>';
                 return;
             }
-
-            contador.textContent = `${resultados.length} ordem(ns) de serviço encontrada(s)`;
             
-            container.innerHTML = resultados.map(os => `
-                <div class="os-item">
-                    <div class="os-codigo">Código: ${os.CODIGO || 'N/A'}</div>
-                    <div class="os-campo"><strong>OS:</strong> ${os.DESCRICAO_OS || ''}</div>
-                    <div class="os-campo"><strong>Sub-OS:</strong> ${os.DESCRICAO_SUB_OS || ''}</div>
-                    <div class="os-campo"><strong>Serviço Realizado:</strong> ${os.SERVICO_REALIZADO || ''}</div>
-                </div>
-            `).join('');
+            // Cria a tabela de resultados
+            let html = '<table><thead><tr><th>ID</th><th>Descrição</th><th>Cliente</th><th>Status</th></tr></thead><tbody>';
+            
+            for (const ordem of resultados) {
+                html += `
+                    <tr>
+                        <td>${ordem.id}</td>
+                        <td>${ordem.descricao}</td>
+                        <td>${ordem.cliente}</td>
+                        <td>${ordem.status}</td>
+                    </tr>
+                `;
+            }
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
         }
 
-        // Mostrar todas as ordens ao carregar a página
+        // Exibe todas as ordens quando a página carrega
         window.onload = function() {
-            mostrarResultados(ordensServico);
+            exibirResultados(ordensDeServico);
         };
     </script>
 </body>
