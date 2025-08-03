@@ -1,15 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <!-- ... (mantenha o head igual) ... -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plataforma de Busca OS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4e73df, #1cc88a);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #4e73df;
+      font-size: 1.8rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus {
+      border-color: #4e73df;
+      box-shadow: 0 0 5px rgba(78, 115, 223, 0.4);
+    }
+    button {
+      background: #4e73df;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #2e59d9;
+    }
+    .resultado {
+      text-align: left;
+      margin-top: 20px;
+      background: #f8f9fc;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+      border: 1px solid #e3e6f0;
+      min-height: 120px;
+    }
+    .resultado strong {
+      color: #1cc88a;
+    }
+    .codigo {
+      display: inline-block;
+      background: #4e73df;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .copiar-btn {
+      background: #1cc88a;
+      margin-left: 8px;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+    }
+    .copiar-btn:hover {
+      background: #17a673;
+    }
+    .loading {
+      color: #4e73df;
+      font-style: italic;
+    }
+    .item-encontrado {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f0f8ff;
+      border-radius: 8px;
+    }
+    .item-encontrado hr {
+      margin: 10px 0;
+      border: 0;
+      border-top: 1px dashed #ccc;
+    }
+    .reload-btn {
+      background: #f6c23e;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .reload-btn:hover {
+      background: #dda20a;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>🔍 Plataforma de Busca OS</h2>
+
     <div class="input-group">
       <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" />
       <button onclick="buscar()">Buscar</button>
     </div>
+
     <div class="resultado" id="resultado">
       <em>Carregando dados de manutenção...</em>
     </div>
@@ -18,46 +140,68 @@
   <script>
     let banco = [];
     let dadosCarregados = false;
+    let tentativas = 0;
+    const MAX_TENTATIVAS = 3;
 
     async function carregarDados() {
       try {
-        document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados...</em>';
+        tentativas++;
+        document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados... (Tentativa ' + tentativas + ')</em>';
         
-        // Tenta vários caminhos possíveis
+        // Caminhos possíveis para o arquivo JSON
         const caminhos = [
-          'manutencoes.json',
-          '/manutencoes.json',
-          './data/manutencoes.json',
-          'https://seu-usuario.github.io/seu-repositorio/manutencoes.json'
+          'dados.json',  // Caminho local
+          './dados.json', // Caminho relativo
+          window.location.pathname.replace(/index\.html$/, '') + 'dados.json', // GitHub Pages
+          'https://raw.githubusercontent.com/seu-usuario/seu-repositorio/main/dados.json' // Raw GitHub URL
         ];
         
+        // Tenta cada caminho até encontrar um que funcione
         for (const caminho of caminhos) {
           try {
+            console.log('Tentando carregar de:', caminho);
             const response = await fetch(caminho);
+            
             if (response.ok) {
               banco = await response.json();
               dadosCarregados = true;
+              console.log('Dados carregados com sucesso de:', caminho);
               document.getElementById('resultado').innerHTML = '<em>Digite um código ou palavra-chave acima...</em>';
-              console.log('Dados carregados de:', caminho);
               return;
             }
           } catch (e) {
-            console.log(`Falha no caminho: ${caminho}`, e);
+            console.warn(`Falha no caminho ${caminho}:`, e);
           }
         }
         
-        throw new Error('Todos os caminhos falharam');
+        // Se todas as tentativas falharem
+        if (tentativas < MAX_TENTATIVAS) {
+          console.log('Tentando novamente...');
+          setTimeout(carregarDados, 2000); // Tenta novamente após 2 segundos
+        } else {
+          throw new Error(`Não foi possível carregar dados.json após ${MAX_TENTATIVAS} tentativas`);
+        }
         
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
-        document.getElementById('resultado').innerHTML = 
-          '<em class="loading">Erro ao carregar os dados. Verifique:<br>1. O arquivo JSON existe<br>2. Está no local correto<br>3. A conexão está ativa</em>';
+        document.getElementById('resultado').innerHTML = `
+          <em class="loading">
+            Erro ao carregar os dados:<br><br>
+            <strong>Possíveis soluções:</strong><br>
+            1. Verifique se o arquivo <strong>dados.json</strong> existe no repositório<br>
+            2. Confira se está na mesma pasta que index.html<br>
+            3. Espere 1-2 minutos após o upload no GitHub<br>
+            4. <a href="javascript:location.reload()" class="reload-btn">Clique para recarregar</a><br><br>
+            <small>Erro técnico: ${error.message}</small>
+          </em>
+        `;
       }
     }
 
     function buscar() {
       if (!dadosCarregados) {
         document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+        carregarDados(); // Tenta carregar novamente
         return;
       }
       
@@ -97,12 +241,15 @@
       if (item) {
         const texto = `Código: ${item.CODIGO}\nOS: ${item.DESCRICAO_OS}\nSub-OS: ${item.DESCRICAO_SUB_OS}\nServiço: ${item.SERVICO_REALIZADO}`;
         navigator.clipboard.writeText(texto)
-          .then(() => alert('Dados copiados!'))
-          .catch(err => console.error('Erro ao copiar:', err));
+          .then(() => alert('Dados copiados para a área de transferência!'))
+          .catch(err => {
+            console.error('Erro ao copiar:', err);
+            alert('Erro ao copiar texto');
+          });
       }
     }
 
-    // Carrega os dados ao iniciar
+    // Carrega os dados quando a página é aberta
     window.onload = carregarDados;
   </script>
 </body>
