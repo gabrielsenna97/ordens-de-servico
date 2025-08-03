@@ -2,9 +2,11 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Plataforma de Busca OS - Oliveira Energia</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- Favicon vazio para evitar erro 404 -->
 </head>
 <body>
   <div class="header">
@@ -17,22 +19,29 @@
       <h2>Plataforma de Busca OS</h2>
       
       <div class="search-box">
-        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" />
-        <button onclick="buscar()">Buscar</button>
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" 
+               aria-label="Campo de busca por código ou palavra-chave" />
+        <button onclick="buscar()" aria-label="Buscar">Buscar</button>
       </div>
       
-      <div class="result-container" id="resultado">
+      <div class="result-container" id="resultado" aria-live="polite">
         <div class="result-placeholder">Digite um código ou palavra-chave acima...</div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Oliveira Energia © 2023 - Todos os direitos reservados
+    Oliveira Energia © <span id="current-year">2023</span> - Todos os direitos reservados
   </div>
 
-  <div class="notification" id="notification"></div>
+  <div class="notification" id="notification" role="alert"></div>
 
-  <script src="js/script.js"></script>
+  <!-- Script no final do body com defer -->
+  <script src="./js/script.js" defer></script>
+  
+  <!-- Script para ano atual -->
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
