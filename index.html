@@ -136,6 +136,31 @@
       border-bottom: 1px dashed #ddd;
     }
     
+    .os-field {
+      margin: 10px 0;
+      padding: 12px;
+      background-color: var(--cinza-claro);
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .copy-btn {
+      background: var(--verde-escuro);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+    
+    .copy-btn:hover {
+      background: var(--verde-claro);
+    }
+    
     .footer {
       text-align: center;
       padding: 20px;
@@ -144,30 +169,17 @@
       font-size: 14px;
     }
     
-    .notificacao {
+    .notification {
       position: fixed;
       bottom: 20px;
       right: 20px;
+      background-color: var(--verde-escuro);
+      color: white;
       padding: 12px 20px;
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       z-index: 1000;
-      animation: fadeIn 0.3s ease-out;
-    }
-    
-    .notificacao.sucesso {
-      background-color: var(--verde-escuro);
-      color: white;
-    }
-    
-    .notificacao.erro {
-      background-color: #e74c3c;
-      color: white;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      display: none;
     }
     
     @media (max-width: 768px) {
@@ -230,86 +242,124 @@
     </div>
   </div>
 
+  <!-- Elemento de notificação -->
+  <div class="notification" id="notification"></div>
+
   <script>
-    // Variáveis globais
-    let bancoDados = [];
-    
-    // Carrega os dados quando a página é carregada
-    window.onload = async function() {
-      await carregarDados();
+    document.addEventListener('DOMContentLoaded', function() {
+      let banco = [];
+      let dadosCarregados = false;
+
+      // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
-    };
-    
-    // Função para carregar dados do JSON
-    async function carregarDados() {
-      try {
-        const resposta = await fetch('dados.json');
-        if (!resposta.ok) throw new Error('Erro ao carregar dados');
-        bancoDados = await resposta.json();
-      } catch (erro) {
-        console.error('Erro:', erro);
-        mostrarNotificacao('Erro ao carregar os dados', 'erro');
+
+      // Carrega os dados ao iniciar
+      carregarDados();
+
+      // Função para carregar dados do JSON
+      async function carregarDados() {
+        try {
+          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados...</em>';
+          
+          const response = await fetch('dados.json');
+          
+          if (response.ok) {
+            banco = await response.json();
+            dadosCarregados = true;
+            document.getElementById('resultado').innerHTML = '<em>Digite um código ou palavra-chave acima...</em>';
+          } else {
+            throw new Error('Falha ao carregar dados');
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
+          document.getElementById('resultado').innerHTML = 
+            '<em class="loading">Erro ao carregar os dados. Verifique:<br>1. O arquivo JSON existe<br>2. Está no local correto<br>3. A conexão está ativa</em>';
+        }
       }
-    }
-    
-    // Função principal de busca
-    function buscar() {
-      const termo = document.getElementById('busca').value.trim().toLowerCase();
-      const elementoResultado = document.getElementById('resultado');
-      
-      if (!termo) {
-        elementoResultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
-        return;
-      }
-      
-      if (bancoDados.length === 0) {
-        elementoResultado.innerHTML = '<em>Dados ainda não carregados. Aguarde...</em>';
-        return;
-      }
-      
-      const resultados = bancoDados.filter(item => 
-        Object.values(item).some(
-          valor => valor && valor.toString().toLowerCase().includes(termo)
-      );
-      
-      mostrarResultados(resultados, termo);
-    }
-    
-    // Mostra os resultados na página
-    function mostrarResultados(resultados, termo) {
-      const elementoResultado = document.getElementById('resultado');
-      
-      if (resultados.length === 0) {
-        elementoResultado.innerHTML = `<em>Nenhum resultado encontrado para "${termo}".</em>`;
-        return;
-      }
-      
-      elementoResultado.innerHTML = resultados.map(item => `
-        <div class="item-resultado">
-          <div class="codigo-resultado">
-            <strong>Código:</strong> ${item.CODIGO || 'N/A'}
+
+      // Função de busca
+      window.buscar = function() {
+        if (!dadosCarregados) {
+          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          return;
+        }
+        
+        const termo = document.getElementById('busca').value.trim().toLowerCase();
+        const resultado = document.getElementById('resultado');
+
+        if (!termo) {
+          resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
+          return;
+        }
+
+        const itensEncontrados = banco.filter(item => 
+          Object.values(item).some(
+            valor => valor && valor.toString().toLowerCase().includes(termo)
+          )
+        );
+
+        mostrarResultados(itensEncontrados, termo);
+      };
+
+      // Mostra os resultados
+      function mostrarResultados(itens, termo) {
+        const resultado = document.getElementById('resultado');
+        
+        if (itens.length === 0) {
+          resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
+          return;
+        }
+
+        resultado.innerHTML = itens.map(item => `
+          <div class="item-resultado">
+            <div class="codigo-resultado">
+              <strong>Código:</strong> ${item.CODIGO || 'N/A'}
+            </div>
+            <div class="os-field">
+              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
+            </div>
+            ${item.DESCRICAO_SUB_OS ? `
+            <div class="os-field">
+              <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
+            </div>` : ''}
+            ${item.SERVICO_REALIZADO ? `
+            <div class="os-field">
+              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
+            </div>` : ''}
           </div>
-          <div class="detalhes-resultado">
-            <p><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</p>
-            ${item.DESCRICAO_SUB_OS ? `<p><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</p>` : ''}
-            ${item.SERVICO_REALIZADO ? `<p><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</p>` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-    
-    // Mostra notificações na tela
-    function mostrarNotificacao(mensagem, tipo = 'sucesso') {
-      const notificacao = document.createElement('div');
-      notificacao.className = `notificacao ${tipo}`;
-      notificacao.textContent = mensagem;
-      document.body.appendChild(notificacao);
-      
-      setTimeout(() => {
-        notificacao.style.opacity = '0';
-        setTimeout(() => notificacao.remove(), 300);
-      }, 3000);
-    }
+        `).join('');
+      }
+
+      // Função para escapar texto
+      function escapeTexto(texto) {
+        if (!texto) return '';
+        return texto.toString()
+          .replace(/'/g, "\\'")
+          .replace(/"/g, '\\"')
+          .replace(/\n/g, '\\n');
+      }
+
+      // Função para copiar texto
+      window.copiarTexto = function(texto, mensagem) {
+        navigator.clipboard.writeText(texto)
+          .then(() => {
+            const notificacao = document.getElementById('notification');
+            notificacao.textContent = mensagem;
+            notificacao.style.display = 'block';
+            
+            setTimeout(() => {
+              notificacao.style.display = 'none';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Erro ao copiar:', err);
+            alert('Erro ao copiar texto');
+          });
+      };
+    });
   </script>
 </body>
 </html>
