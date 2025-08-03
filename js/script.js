@@ -1,152 +1,126 @@
+// Configuração inicial
 document.addEventListener('DOMContentLoaded', function() {
-  // Variáveis globais
-  let banco = [];
-  let dadosCarregados = false;
-  const buscaInput = document.getElementById('busca');
-  const resultadoDiv = document.getElementById('resultado');
+  // Elementos da DOM
+  const searchInput = document.getElementById('searchInput');
+  const searchButton = document.getElementById('searchButton');
+  const resultsContainer = document.getElementById('resultsContainer');
   const notification = document.getElementById('notification');
-
-  // Carrega os dados ao iniciar
-  carregarDados();
-
-  // Função melhorada para carregar dados
-  async function carregarDados() {
-    try {
-      mostrarStatus('Carregando dados...');
-      
-      const response = await fetch('dados.json');
-      
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      
-      banco = await response.json();
-      
-      // Validação básica dos dados
-      if (!Array.isArray(banco)) {
-        throw new Error('Formato inválido: esperado um array no JSON');
+  
+  // Dados (pode ser substituído por fetch para dados.json)
+  let database = [];
+  
+  // Carregar dados (substitua por fetch real se necessário)
+  function loadData() {
+    // Simulando carregamento de dados.json
+    database = [
+      {
+        "CODIGO": "F003",
+        "DESCRICAO_OS": "Bucha",
+        "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
+        "SERVICO_REALIZADO": "Troca da junta do cárter e limpeza da área"
+      },
+      {
+        "CODIGO": "F008",
+        "DESCRICAO_OS": "Troca de bicos injetores",
+        "DESCRICAO_SUB_OS": "Alto consumo de combustível (0.265L/H)",
+        "SERVICO_REALIZADO": "Substituição dos bicos injetores e kit de vedação"
       }
-      
-      dadosCarregados = true;
-      mostrarStatus('Digite um código ou palavra-chave acima...');
-      
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-      mostrarStatus(`
-        Erro ao carregar dados. Verifique:<br>
-        1. Se o arquivo <strong>dados.json</strong> existe<br>
-        2. Se o formato do JSON está correto<br>
-        3. Se o servidor está acessível
-      `, 'erro');
-    }
+    ];
   }
-
-  // Função de busca otimizada
-  function buscar() {
-    if (!validarDadosCarregados()) return;
+  
+  // Função de busca
+  function search() {
+    const term = normalizeString(searchInput.value.trim());
     
-    const termo = normalizarTermo(buscaInput.value);
-    if (!validarTermo(termo)) return;
-
-    const itensEncontrados = filtrarResultados(termo);
-    mostrarResultados(itensEncontrados, termo);
-  }
-
-  // Funções auxiliares
-  function mostrarStatus(mensagem, tipo = 'info') {
-    resultadoDiv.innerHTML = `<div class="result-placeholder ${tipo}">${mensagem}</div>`;
-  }
-
-  function validarDadosCarregados() {
-    if (!dadosCarregados) {
-      mostrarStatus('Dados ainda não carregados. Aguarde...', 'alerta');
-      return false;
-    }
-    return true;
-  }
-
-  function normalizarTermo(termo) {
-    return termo.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-  }
-
-  function validarTermo(termo) {
-    if (!termo) {
-      mostrarStatus('Por favor, digite algo para buscar.', 'alerta');
-      return false;
-    }
-    return true;
-  }
-
-  function filtrarResultados(termo) {
-    return banco.filter(item => 
-      Object.values(item).some(valor => 
-        valor && normalizarTermo(valor.toString()).includes(termo)
-    );
-  }
-
-  function mostrarResultados(itens, termo) {
-    if (itens.length === 0) {
-      mostrarStatus(`Nenhum resultado para "${termo}". Tente: F083, F088 ou termos relacionados`, 'alerta');
+    if (!term) {
+      showNotification('Digite um termo para buscar', 'alerta');
       return;
     }
 
-    resultadoDiv.innerHTML = itens.map(item => `
-      <div class="os-item">
-        <div class="os-code">
-          <span>Código: ${item.CODIGO || 'N/A'}</span>
-        </div>
-        ${criarCampoCopiavel('OS', item.DESCRICAO_OS)}
-        ${item.DESCRICAO_SUB_OS ? criarCampoCopiavel('Sub-OS', item.DESCRICAO_SUB_OS) : ''}
-        ${item.SERVICO_REALIZADO ? criarCampoCopiavel('Serviço', item.SERVICO_REALIZADO) : ''}
+    const results = database.filter(item => 
+      normalizeString(item.CODIGO).includes(term) ||
+      normalizeString(item.DESCRICAO_OS).includes(term) ||
+      (item.DESCRICAO_SUB_OS && normalizeString(item.DESCRICAO_SUB_OS).includes(term)) ||
+      (item.SERVICO_REALIZADO && normalizeString(item.SERVICO_REALIZADO).includes(term))
+    );
+
+    displayResults(results);
+  }
+  
+  // Mostrar resultados
+  function displayResults(results) {
+    if (results.length === 0) {
+      resultsContainer.innerHTML = '<div class="result-item"><p>Nenhum resultado encontrado</p></div>';
+      return;
+    }
+
+    resultsContainer.innerHTML = results.map(item => `
+      <div class="result-item">
+        <h3>Código: ${item.CODIGO}</h3>
+        <p><strong>OS:</strong> ${item.DESCRICAO_OS} 
+          <button class="copy-btn" data-text="${escapeHtml(item.DESCRICAO_OS)}">Copiar</button>
+        </p>
+        ${item.DESCRICAO_SUB_OS ? `
+        <p><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}
+          <button class="copy-btn" data-text="${escapeHtml(item.DESCRICAO_SUB_OS)}">Copiar</button>
+        </p>` : ''}
+        ${item.SERVICO_REALIZADO ? `
+        <p><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}
+          <button class="copy-btn" data-text="${escapeHtml(item.SERVICO_REALIZADO)}">Copiar</button>
+        </p>` : ''}
       </div>
     `).join('');
-  }
-
-  function criarCampoCopiavel(titulo, conteudo) {
-    if (!conteudo) return '';
-    return `
-      <div class="os-field">
-        <div><strong>${titulo}:</strong> ${conteudo}</div>
-        <button class="copy-btn" onclick="copiarTexto('${escapeTexto(conteudo)}', '${titulo} copiado!')">
-          Copiar
-        </button>
-      </div>
-    `;
-  }
-
-  function escapeTexto(texto) {
-    return texto ? texto.toString()
-      .replace(/'/g, "\\'")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, '\\n') : '';
-  }
-
-  // Função global para copiar texto
-  window.copiarTexto = function(texto, mensagem) {
-    if (!texto) return;
     
-    navigator.clipboard.writeText(texto)
+    // Adiciona eventos aos botões de cópia
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        copyToClipboard(this.getAttribute('data-text'));
+      });
+    });
+  }
+  
+  // Utilitários
+  function normalizeString(str) {
+    return str.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+  }
+  
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+  
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
       .then(() => {
-        notification.textContent = mensagem;
-        notification.className = 'notification sucesso';
-        notification.style.display = 'block';
-        
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 2000);
+        showNotification('Texto copiado!');
       })
       .catch(err => {
         console.error('Erro ao copiar:', err);
-        notification.textContent = 'Erro ao copiar texto';
-        notification.className = 'notification erro';
-        notification.style.display = 'block';
-        setTimeout(() => { notification.style.display = 'none'; }, 2000);
+        showNotification('Erro ao copiar texto', 'erro');
       });
   }
-
-  // Expõe a função de busca
-  window.buscar = buscar;
-
-  // Event listener para tecla Enter
-  buscaInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') buscar();
+  
+  function showNotification(message, type = 'sucesso') {
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 2000);
+  }
+  
+  // Event Listeners
+  searchButton.addEventListener('click', search);
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') search();
   });
+  
+  // Inicialização
+  loadData();
 });
