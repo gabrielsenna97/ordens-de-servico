@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,12 +8,10 @@
   <style>
     :root {
       --verde-escuro: #069732;
-      --verde-medio: #1a8c3d;
       --verde-claro: #2fbe1a;
       --amarelo: #ffea00;
-      --branco: #ffffff;
+      --branco: #fdfdfc;
       --cinza-claro: #f5f5f5;
-      --cinza-escuro: #333333;
     }
     
     body {
@@ -20,280 +19,209 @@
       margin: 0;
       padding: 0;
       background-color: var(--branco);
-      color: var(--cinza-escuro);
     }
     
-    .header-container {
+    .top-bar-white {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
+      height: 80px;
+      background-color: var(--branco);
       z-index: 100;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      background-color: var(--branco);
-    }
-    
-    .header-top {
       display: flex;
       align-items: center;
-      padding: 15px 20px;
+      padding-left: 20px;
+    }
+    
+    .top-bar-green {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background-color: var(--verde-escuro);
+      z-index: 100;
     }
     
     .logo-container {
-      height: 70px;
-      margin-right: 20px;
+      height: 50px;
     }
     
     .logo-container img {
       height: 100%;
       width: auto;
-      max-width: 300px;
-    }
-    
-    .company-header {
-      background-color: var(--verde-escuro);
-      color: white;
-      padding: 10px 20px;
-      font-size: 24px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      border-radius: 4px;
-      flex-grow: 1;
-      text-align: center;
-    }
-    
-    .top-bar-green {
-      height: 8px;
-      background-color: var(--verde-claro);
-      width: 100%;
+      max-width: 250px;
     }
     
     .main-content {
-      margin-top: 108px;
+      margin-top: 92px;
       padding: 20px;
     }
     
     .card {
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
       background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 30px;
-      border-top: 5px solid var(--amarelo);
+      border-top: 3px solid var(--amarelo);
     }
     
     h1 {
       color: var(--verde-escuro);
       text-align: center;
       margin-top: 0;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       font-size: 28px;
-      font-weight: 600;
-      text-transform: uppercase;
     }
     
     .search-box {
       display: flex;
-      margin: 25px 0;
+      margin: 20px 0;
     }
     
     .search-box input {
       flex: 1;
-      padding: 14px 20px;
-      border: 2px solid #ddd;
-      border-radius: 6px 0 0 6px;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
       font-size: 16px;
-      transition: all 0.3s;
+      transition: border 0.3s;
     }
     
     .search-box input:focus {
-      border-color: var(--verde-medio);
+      border-color: var(--verde-claro);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(6, 151, 50, 0.2);
+      box-shadow: 0 0 0 2px rgba(6, 151, 50, 0.2);
     }
     
     .search-box button {
-      padding: 0 30px;
+      padding: 0 25px;
       background-color: var(--verde-escuro);
       color: white;
       border: none;
-      border-radius: 0 6px 6px 0;
+      border-radius: 0 4px 4px 0;
       cursor: pointer;
       font-weight: 600;
-      font-size: 16px;
       transition: all 0.3s;
     }
     
     .search-box button:hover {
-      background-color: var(--verde-medio);
+      background-color: var(--verde-claro);
     }
     
     .result-container {
       min-height: 100px;
-      padding: 25px;
+      padding: 20px;
       background-color: var(--cinza-claro);
-      border-radius: 8px;
+      border-radius: 4px;
       border-left: 4px solid var(--amarelo);
     }
     
     .item-resultado {
       background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .codigo-resultado {
       color: var(--verde-escuro);
       font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--amarelo);
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #ddd;
     }
     
     .os-field {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 10px 0;
+      padding: 12px;
       background-color: var(--cinza-claro);
-      border-radius: 6px;
+      border-radius: 4px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-    
-    .os-field div {
-      flex: 1;
     }
     
     .copy-btn {
       background: var(--verde-escuro);
       color: white;
       border: none;
-      padding: 8px 15px;
+      padding: 6px 12px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
       transition: all 0.3s;
-      margin-left: 15px;
-      white-space: nowrap;
     }
     
     .copy-btn:hover {
-      background: var(--verde-medio);
-      transform: translateY(-2px);
+      background: var(--verde-claro);
     }
     
     .footer {
       text-align: center;
-      padding: 25px;
+      padding: 20px;
       color: #666;
-      margin-top: 40px;
+      margin-top: 30px;
       font-size: 14px;
-      background-color: var(--branco);
-      border-radius: 8px;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     }
     
     .notification {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
+      bottom: 20px;
+      right: 20px;
       background-color: var(--verde-escuro);
       color: white;
-      padding: 15px 25px;
-      border-radius: 6px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      padding: 12px 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       z-index: 1000;
       display: none;
-      font-weight: 500;
-    }
-
-    .loading {
-      color: #666;
-      font-style: italic;
-    }
-
-    .erro {
-      color: #e74c3c;
-      font-weight: bold;
     }
     
     @media (max-width: 768px) {
-      .header-top {
-        flex-direction: column;
-        padding: 10px;
+      .top-bar-white {
+        height: 70px;
+        padding-left: 15px;
+      }
+      
+      .top-bar-green {
+        top: 70px;
+        height: 10px;
       }
       
       .logo-container {
-        height: 60px;
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-      
-      .company-header {
-        font-size: 20px;
-        padding: 8px 15px;
-        width: 100%;
+        height: 40px;
       }
       
       .main-content {
-        margin-top: 148px;
-        padding: 15px;
-      }
-      
-      .card {
-        padding: 20px;
+        margin-top: 80px;
       }
       
       h1 {
         font-size: 24px;
       }
       
-      .search-box {
-        flex-direction: column;
-      }
-      
-      .search-box input {
-        border-radius: 6px;
-        margin-bottom: 10px;
-      }
-      
       .search-box button {
-        border-radius: 6px;
-        padding: 12px;
-      }
-      
-      .os-field {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .copy-btn {
-        margin-left: 0;
-        margin-top: 10px;
-        width: 100%;
+        padding: 0 15px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Cabeçalho modificado com logo à esquerda -->
-  <div class="header-container">
-    <div class="header-top">
-      <div class="logo-container">
-        <img src="olv.png" alt="Oliveira Energia">
-      </div>
-      <div class="company-header">
-        OLIVEIRA ENERGIA
-      </div>
+  <!-- Faixa branca grossa no topo com logo -->
+  <div class="top-bar-white">
+    <div class="logo-container">
+      <img src="olv.png" alt="Oliveira Energia">
     </div>
-    <div class="top-bar-green"></div>
   </div>
+  
+  <!-- Faixa verde abaixo -->
+  <div class="top-bar-green"></div>
 
   <!-- Conteúdo principal -->
   <div class="main-content">
@@ -301,12 +229,12 @@
       <h1>Plataforma de Busca OS</h1>
       
       <div class="search-box">
-        <input type="text" id="busca" placeholder="Digite o código ou palavra-chave (ex: FILTROS, INJETORES)">
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave" onkeypress="if(event.key === 'Enter') buscar()">
         <button onclick="buscar()">Buscar</button>
       </div>
       
       <div class="result-container" id="resultado">
-        <em class="loading">Carregando dados...</em>
+        <em>Digite um código ou palavra-chave acima...</em>
       </div>
     </div>
     
@@ -323,137 +251,90 @@
       let banco = [];
       let dadosCarregados = false;
 
-      // Elementos DOM
-      const buscaInput = document.getElementById('busca');
-      const resultadoDiv = document.getElementById('resultado');
-      const notification = document.getElementById('notification');
-
       // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
 
-      // Carrega os dados do JSON
+      // Carrega os dados ao iniciar
+      carregarDados();
+
+      // Função para carregar dados do JSON
       async function carregarDados() {
         try {
+          document.getElementById('resultado').innerHTML = '<em class="loading">Carregando dados...</em>';
+          
           const response = await fetch('dados.json');
           
-          if (!response.ok) {
-            throw new Error(`Erro HTTP! Status: ${response.status}`);
+          if (response.ok) {
+            banco = await response.json();
+            dadosCarregados = true;
+            document.getElementById('resultado').innerHTML = '<em>Digite um código ou palavra-chave acima...</em>';
+          } else {
+            throw new Error('Falha ao carregar dados');
           }
-          
-          banco = await response.json();
-          
-          // Validação dos dados
-          if (!Array.isArray(banco)) {
-            throw new Error('Formato inválido: o JSON deve conter um array');
-          }
-
-          // Gera códigos automáticos se estiverem vazios
-          banco.forEach((item, index) => {
-            if (!item.CODIGO) {
-              item.CODIGO = `OS${String(index + 1).padStart(3, '0')}`;
-            }
-          });
-          
-          dadosCarregados = true;
-          resultadoDiv.innerHTML = '<em class="loading">Digite um termo de busca acima...</em>';
-          
         } catch (error) {
           console.error('Erro ao carregar dados:', error);
-          resultadoDiv.innerHTML = `
-            <div class="erro">
-              <p>Erro ao carregar os dados. Verifique:</p>
-              <ul>
-                <li>Se o arquivo <strong>dados.json</strong> existe</li>
-                <li>Se o formato do JSON está correto</li>
-                <li>Se o servidor está acessível</li>
-              </ul>
-              <p>Detalhes do erro: ${error.message}</p>
-            </div>
-          `;
+          document.getElementById('resultado').innerHTML = 
+            '<em class="loading">Erro ao carregar os dados. Verifique:<br>1. O arquivo JSON existe<br>2. Está no local correto<br>3. A conexão está ativa</em>';
         }
       }
 
-      // Função de busca otimizada
-      function buscar() {
+      // Função de busca
+      window.buscar = function() {
         if (!dadosCarregados) {
-          resultadoDiv.innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
           return;
         }
         
-        const termo = buscaInput.value.trim().toLowerCase();
-        
+        const termo = document.getElementById('busca').value.trim().toLowerCase();
+        const resultado = document.getElementById('resultado');
+
         if (!termo) {
-          resultadoDiv.innerHTML = '<em class="loading">Por favor, digite algo para buscar.</em>';
+          resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
           return;
         }
 
-        const itensEncontrados = banco.filter(item => {
-          // Busca em todos os campos exceto CODIGO (quando vazio)
-          return Object.entries(item).some(([chave, valor]) => {
-            if (chave === 'CODIGO' && !valor) return false;
-            return valor && valor.toString().toLowerCase().includes(termo);
-          });
-        });
+        const itensEncontrados = banco.filter(item => 
+          Object.values(item).some(
+            valor => valor && valor.toString().toLowerCase().includes(termo)
+          )
+        );
 
         mostrarResultados(itensEncontrados, termo);
-      }
+      };
 
-      // Mostra os resultados formatados
+      // Mostra os resultados
       function mostrarResultados(itens, termo) {
+        const resultado = document.getElementById('resultado');
+        
         if (itens.length === 0) {
-          resultadoDiv.innerHTML = `
-            <em class="loading">Nenhum resultado para "${termo}". Sugestões:</em>
-            <ul>
-              <li>Tente termos como "FILTROS", "INJETORES" ou "PREVENTIVA"</li>
-              <li>Verifique a ortografia</li>
-              <li>Use termos mais genéricos</li>
-            </ul>
-          `;
+          resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
           return;
         }
 
-        resultadoDiv.innerHTML = itens.map(item => `
+        resultado.innerHTML = itens.map(item => `
           <div class="item-resultado">
             <div class="codigo-resultado">
-              <strong>Código:</strong> ${item.CODIGO || 'Não informado'}
+              <strong>Código:</strong> ${item.CODIGO || 'N/A'}
             </div>
-            
             <div class="os-field">
-              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'Não especificado'}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS)}', 'OS copiada!')">
-                Copiar
-              </button>
+              <div><strong>OS:</strong> ${item.DESCRICAO_OS || 'N/A'}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_OS || '')}', 'OS copiado!')">Copiar</button>
             </div>
-            
             ${item.DESCRICAO_SUB_OS ? `
             <div class="os-field">
               <div><strong>Sub-OS:</strong> ${item.DESCRICAO_SUB_OS}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiada!')">
-                Copiar
-              </button>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.DESCRICAO_SUB_OS)}', 'Sub-OS copiado!')">Copiar</button>
             </div>` : ''}
-            
             ${item.SERVICO_REALIZADO ? `
             <div class="os-field">
-              <div><strong>Serviço:</strong> ${formatarServico(item.SERVICO_REALIZADO)}</div>
-              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">
-                Copiar
-              </button>
+              <div><strong>Serviço:</strong> ${item.SERVICO_REALIZADO}</div>
+              <button class="copy-btn" onclick="copiarTexto('${escapeTexto(item.SERVICO_REALIZADO)}', 'Serviço copiado!')">Copiar</button>
             </div>` : ''}
           </div>
         `).join('');
       }
 
-      // Formata o texto do serviço para melhor legibilidade
-      function formatarServico(texto) {
-        if (!texto) return '';
-        // Adiciona quebras de linha após pontos e dois pontos
-        return texto
-          .replace(/\. /g, '.<br><br>')
-          .replace(/\: /g, ':<br>');
-      }
-
-      // Escapa texto para uso em HTML/JS
+      // Função para escapar texto
       function escapeTexto(texto) {
         if (!texto) return '';
         return texto.toString()
@@ -464,34 +345,21 @@
 
       // Função para copiar texto
       window.copiarTexto = function(texto, mensagem) {
-        if (!texto) return;
-        
-        navigator.clipboard.writeText(texto.replace(/<br>/g, '\n'))
+        navigator.clipboard.writeText(texto)
           .then(() => {
-            notification.textContent = mensagem;
-            notification.style.display = 'block';
+            const notificacao = document.getElementById('notification');
+            notificacao.textContent = mensagem;
+            notificacao.style.display = 'block';
             
             setTimeout(() => {
-              notification.style.display = 'none';
+              notificacao.style.display = 'none';
             }, 2000);
           })
           .catch(err => {
             console.error('Erro ao copiar:', err);
-            notification.textContent = 'Erro ao copiar texto';
-            notification.style.display = 'block';
-            setTimeout(() => { notification.style.display = 'none'; }, 2000);
+            alert('Erro ao copiar texto');
           });
-      }
-
-      // Event listeners
-      buscaInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') buscar();
-      });
-
-      window.buscar = buscar;
-
-      // Inicia o carregamento
-      carregarDados();
+      };
     });
   </script>
 </body>
