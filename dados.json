@@ -1,20 +1,20 @@
 [
   {
-    "codigo": "F001",
-    "inicial": "Falha elétrica no motor.",
-    "descricao2": "Verificação da fiação e conexões.",
-    "final": "Substituição do cabo principal e teste realizado."
+    "CODIGO": "F001",
+    "DESCRICAO_OS": "Falha elétrica no motor.",
+    "DESCRICAO_SUB_OS": "Verificação da fiação e conexões.",
+    "SERVICO_REALIZADO": "Substituição do cabo principal e teste realizado."
   },
   {
-    "codigo": "F002",
-    "inicial": "Vazamento de óleo detectado.",
-    "descricao2": "Inspeção de juntas e mangueiras.",
-    "final": "Troca da junta do cárter e limpeza da área."
+    "CODIGO": "F002",
+    "DESCRICAO_OS": "Vazamento de óleo detectado.",
+    "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras.",
+    "SERVICO_REALIZADO": "Troca da junta do cárter e limpeza da área."
   },
   {
-    "codigo": "F003",
-    "inicial": "bucha.",
-    "descricao2": "Inspeção de juntas e mangueiras.",
-    "final": "Troca da junta do cárter e limpeza da área."
+    "CODIGO": "F003",
+    "DESCRICAO_OS": "Bucha.",
+    "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras.",
+    "SERVICO_REALIZADO": "Troca da junta do cárter e limpeza da área."
   }
 ]
