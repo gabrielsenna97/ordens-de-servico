@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,12 +8,12 @@
       font-family: sans-serif;
       padding: 20px;
       background-color: #ffffff;
-      color: #2e4e1d; /* verde médio escuro para o texto */
+      color: #2e4e1d;
     }
 
     h1 {
-      color: #2e7d32; /* verde médio */
-      border-bottom: 2px solid #ffcc33; /* laranja meio amarelo */
+      color: #2e7d32;
+      border-bottom: 2px solid #ffcc33;
       padding-bottom: 10px;
     }
 
@@ -22,7 +21,7 @@
       padding: 12px;
       width: 100%;
       font-size: 16px;
-      border: 2px solid #ffcc33; /* laranja amarelo */
+      border: 2px solid #ffcc33;
       border-radius: 8px;
       margin-bottom: 20px;
       box-sizing: border-box;
@@ -30,16 +29,31 @@
     }
 
     .os-card {
-      background: #f9fff9; /* branco esverdeado suave */
+      background: #f9fff9;
       padding: 15px;
       margin: 12px 0;
-      border-left: 6px solid #2e7d32; /* faixa lateral verde médio */
+      border-left: 6px solid #2e7d32;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .os-card strong {
-      color: #ff9800; /* laranja */
+      color: #ff9800;
+    }
+
+    .copiar-btn {
+      margin-left: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .copiar-btn:hover {
+      background-color: #256428;
     }
 
     p {
@@ -70,6 +84,12 @@
 
     let fuse;
 
+    function copiarTexto(texto) {
+      navigator.clipboard.writeText(texto)
+        .then(() => console.log("Copiado:", texto))
+        .catch(err => console.error("Erro ao copiar:", err));
+    }
+
     function filtrar() {
       const termo = document.getElementById('busca').value.trim();
       const container = document.getElementById('resultados');
@@ -87,9 +107,18 @@
         container.innerHTML += `
           <div class="os-card">
             <div><strong>Código:</strong> ${d.CODIGO}</div>
-            <div><strong>Descrição:</strong> ${d.DESCRICAO_OS}</div>
-            <div><strong>Sub:</strong> ${d.DESCRICAO_SUB_OS}</div>
-            <div><strong>Serviço:</strong> ${d.SERVICO_REALIZADO}</div>
+            <div>
+              <strong>Descrição:</strong> ${d.DESCRICAO_OS}
+              <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_OS.replace(/'/g, "\\'")}')">Copiar</button>
+            </div>
+            <div>
+              <strong>Sub:</strong> ${d.DESCRICAO_SUB_OS}
+              <button class="copiar-btn" onclick="copiarTexto('${d.DESCRICAO_SUB_OS.replace(/'/g, "\\'")}')">Copiar</button>
+            </div>
+            <div>
+              <strong>Serviço:</strong> ${d.SERVICO_REALIZADO}
+              <button class="copiar-btn" onclick="copiarTexto('${d.SERVICO_REALIZADO.replace(/'/g, "\\'")}')">Copiar</button>
+            </div>
           </div>
         `;
       });
