@@ -4,94 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Busca OS - Oliveira Energia</title>
-  <style>
-    :root {
-      --verde-escuro: #069732;
-      --verde-claro: #2fbe1a;
-      --amarelo: #ffea00;
-      --branco: #fdfdfc;
-      --cinza-claro: #f5f5f5;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--branco);
-      padding-top: 100px; /* Espaço para a logo */
-    }
-    
-    /* Container da Logo - Versão melhorada */
-    .logo-container {
-      position: fixed; /* Alterado para fixed */
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      width: 200px;
-      padding: 15px;
-      background-color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      border-bottom-right-radius: 10px;
-    }
-    
-    .logo-container img {
-      width: 100%;
-      height: auto;
-      transition: transform 0.3s;
-    }
-    
-    .logo-container:hover img {
-      transform: scale(1.03);
-    }
-
-    /* Header ajustado */
-    .header {
-      padding: 30px 0 20px;
-      text-align: center;
-      background: linear-gradient(to bottom, white, var(--cinza-claro));
-      border-bottom: 1px solid #eee;
-      margin-bottom: 30px;
-    }
-
-    /* Ajuste do container principal */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
-    }
-
-    /* Seus estilos existentes abaixo... */
-    .card {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      padding: 30px;
-      margin-bottom: 30px;
-      border-top: 3px solid var(--amarelo);
-    }
-    
-    /* ... (mantenha todos os outros estilos que você já tinha) ... */
-  </style>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-  <!-- Logo no canto superior esquerdo - Versão melhorada -->
+  <!-- Logo no canto superior esquerdo -->
   <div class="logo-container">
-    <img src="469352364_591010173324897_8606128247697935921_n-removebg-preview.png" 
-         alt="Oliveira Energia">
+    <img src="olv.png" alt="Oliveira Energia">
   </div>
 
-  <!-- Restante do seu HTML -->
+  <!-- Cabeçalho -->
   <div class="header">
     <h1>Plataforma de Busca OS</h1>
   </div>
   
+  <!-- Conteúdo Principal -->
   <div class="container">
-    <!-- ... resto do seu conteúdo ... -->
+    <div class="card">
+      <div class="search-box">
+        <input type="text" id="busca" placeholder="Digite o código (ex: F001) ou palavra-chave">
+        <button onclick="buscar()">Buscar</button>
+      </div>
+      
+      <div class="result-container" id="resultado">
+        <div class="result-placeholder">Digite um código ou palavra-chave acima...</div>
+      </div>
+    </div>
   </div>
 
+  <!-- Rodapé -->
+  <div class="footer">
+    Oliveira Energia © <span id="current-year"></span> - Todos os direitos reservados
+  </div>
+
+  <!-- Notificação -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Scripts -->
+  <script src="./js/script.js"></script>
   <script>
-    // Seu JavaScript existente
+    // Atualiza o ano automaticamente
+    document.getElementById('current-year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
