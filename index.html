@@ -222,6 +222,17 @@
       color: var(--verde-escuro);
     }
     
+    .loading {
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    
     @media (max-width: 768px) {
       .header-top {
         flex-direction: column;
@@ -319,42 +330,48 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Dados mockados para exemplo
-      let banco = [
-        {
-          "CODIGO": "F083",
-          "DESCRICAO_OS": "Bucha",
-          "DESCRICAO_SUB_OS": "Inspeção de juntas e mangueiras",
-          "SERVICO_REALIZADO": "Trou da junta do cânter e limpeza da área"
-        },
-        {
-          "CODIGO": "F088",
-          "DESCRICAO_OS": "TROCA DE BICOS INJETORES",
-          "DESCRICAO_SUB_OS": "MAQUINA APRESENTANDO ALTO CONSUMO 0,268L/H",
-          "SERVICO_REALIZADO": ""
-        },
-        {
-          "CODIGO": "F090",
-          "DESCRICAO_OS": "MANUTENÇÃO PREVENTIVA",
-          "DESCRICAO_SUB_OS": "",
-          "SERVICO_REALIZADO": "COORDENCIALIA ACOMPANHAMENTO FOI IDENTIFICADO QUE O GRUPO SOLADOR ESTÁ APRESENTANDO ALTO CONSUMO 0,263 L/H. FOI REALIZADO CHEGUISTE E INVADO PARA ANÁLISE E APÓS AVALIAÇÃO FOI APROVADO A SUBSTITUIÇÃO DAS URNDEZS INJETORES. FOI REALIZADO A SUBSTITUIÇÃO DOS BICOS INJETORES, ARRIBA-LA DO VIDAÇÃO E RIT AMIL DE VIDAÇÃO DO INJETOR. FEITO INSPEÇÃO NAS BUCHAS DO SIGNATÂMICO, INSPEÇÃO NO FLITRO E AR, LIMPEZA DA VAQUINA SOLENDOS, SUBSTITUIÇÃO DOS FLITROS DE COMBUSTINTE PRIMÁRIO E SEGUNDARSE À LAUGURA EXTERNA E INTERNA, VARIELAMENTO DO BOJADOR, REALIZADO CRUDEMENTO DE ADMIN. MATERIAL ITIPIZADO NA CORRETOR DE BICO."
-        }
-      ];
-      let dadosCarregados = true;
-
+      // Variáveis globais
+      let banco = [];
+      let dadosCarregados = false;
+      const resultado = document.getElementById('resultado');
+      
       // Atualiza o ano automaticamente
       document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // Carrega os dados do JSON
+      carregarDados();
+
+      // Função para carregar os dados do JSON
+      function carregarDados() {
+        resultado.innerHTML = '<em class="loading">Carregando dados...</em>';
+        
+        fetch('dados.json') // Certifique-se de que o arquivo dados.json está no mesmo diretório
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao carregar o arquivo JSON');
+            }
+            return response.json();
+          })
+          .then(data => {
+            banco = data;
+            dadosCarregados = true;
+            resultado.innerHTML = '<em>Digite um código ou palavra-chave para buscar...</em>';
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            resultado.innerHTML = '<em>Erro ao carregar os dados. Por favor, recarregue a página.</em>';
+          });
+      }
 
       // Função de busca
       window.buscar = function() {
         if (!dadosCarregados) {
-          document.getElementById('resultado').innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
+          resultado.innerHTML = '<em class="loading">Dados ainda não carregados. Aguarde...</em>';
           return;
         }
         
         const termo = document.getElementById('busca').value.trim().toLowerCase();
-        const resultado = document.getElementById('resultado');
-
+        
         if (!termo) {
           resultado.innerHTML = '<em>Por favor, digite algo para buscar.</em>';
           return;
@@ -363,7 +380,6 @@
         const itensEncontrados = banco.filter(item => 
           Object.values(item).some(
             valor => valor && valor.toString().toLowerCase().includes(termo)
-          )
         );
 
         mostrarResultados(itensEncontrados, termo);
@@ -371,8 +387,6 @@
 
       // Mostra os resultados
       function mostrarResultados(itens, termo) {
-        const resultado = document.getElementById('resultado');
-        
         if (itens.length === 0) {
           resultado.innerHTML = `<em>Nenhum resultado para "${termo}". Tente outro termo.</em>`;
           return;
@@ -412,7 +426,12 @@
 
       // Função para copiar texto
       window.copiarTexto = function(texto, mensagem) {
-        navigator.clipboard.writeText(texto)
+        // Remove as barras de escape antes de copiar
+        const textoParaCopiar = texto.replace(/\\'/g, "'")
+                                     .replace(/\\"/g, '"')
+                                     .replace(/\\n/g, '\n');
+        
+        navigator.clipboard.writeText(textoParaCopiar)
           .then(() => {
             const notificacao = document.getElementById('notification');
             notificacao.textContent = mensagem;
